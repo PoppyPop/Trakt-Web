@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakt.Web", "Trakt.Web\Trakt.Web.csproj", "{3C87EC80-FD66-4D22-AA49-27A53E4976CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraktDl.Web", "TraktDl.Web\TraktDl.Web.csproj", "{3C87EC80-FD66-4D22-AA49-27A53E4976CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakt.Business", "Trakt.Business\Trakt.Business.csproj", "{746E8E17-163E-47B1-9321-A83065215E67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraktDl.Business", "TraktDl.Business\TraktDl.Business.csproj", "{746E8E17-163E-47B1-9321-A83065215E67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
