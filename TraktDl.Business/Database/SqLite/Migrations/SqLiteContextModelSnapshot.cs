@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TraktDl.Business.Database.SqLite;
 
-namespace Docker.AutoDl.Database.SqLite.Migrations
+namespace TraktDl.Business.Database.SqLite.Migrations
 {
     [DbContext(typeof(SqLiteContext))]
     partial class SqLiteContextModelSnapshot : ModelSnapshot

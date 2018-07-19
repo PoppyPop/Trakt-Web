@@ -21,6 +21,24 @@ namespace TraktDl.Business.Database.SqLite
             get { return context.BlackListShows.Select(b => b.Convert()).ToList(); }
         }
 
+        public List<ApiKey> ApiKeys => context.ApiKeys.Select(b => b.Convert()).ToList();
+
+        public void AddApiKey(ApiKey apiKey)
+        {
+            var exist = context.ApiKeys.SingleOrDefault(b => b.Id == apiKey.Id);
+
+            if (exist == null)
+            {
+                context.ApiKeys.Add(new ApiKeySqLite(apiKey));
+            }
+            else
+            {
+                exist.ApiData = apiKey.ApiData;
+            }
+
+            context.SaveChanges();
+        }
+
         public void AddBlackList(BlackListShow blackListShow)
         {
             var exist = context.BlackListShows.Any(b => b.TraktShowId == blackListShow.TraktShowId && b.Season == blackListShow.Season && b.Entire == blackListShow.Entire);

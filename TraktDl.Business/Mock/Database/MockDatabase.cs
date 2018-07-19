@@ -7,9 +7,17 @@ namespace TraktDl.Business.Mock.Database
     {
         public List<BlackListShow> BlackLists { get; set; }
 
+        public List<ApiKey> ApiKeys { get; set; }
+
         public MockDatabase()
         {
             BlackLists = new List<BlackListShow>();
+            ApiKeys = new List<ApiKey>();
+        }
+
+        public void AddApiKey(ApiKey apiKey)
+        {
+            ApiKeys.Add(apiKey);
         }
 
         public void AddBlackList(BlackListShow blackListShow)

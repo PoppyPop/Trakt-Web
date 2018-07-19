@@ -9,14 +9,26 @@ using TraktDl.Business.Database.SqLite;
 namespace TraktDl.Business.Database.SqLite.Migrations
 {
     [DbContext(typeof(SqLiteContext))]
-    [Migration("20180719101819_Add_Show-Season-Episode")]
-    partial class Add_ShowSeasonEpisode
+    [Migration("20180719111930_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
+
+            modelBuilder.Entity("TraktDl.Business.Database.SqLite.ApiKeySqLite", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<string>("ApiData")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApiKeys");
+                });
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.BlackListShowSqLite", b =>
                 {
@@ -36,7 +48,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                     b.HasIndex("TraktShowId", "Season")
                         .IsUnique();
 
-                    b.ToTable("BlackListShow");
+                    b.ToTable("BlackListShows");
                 });
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.EpisodeSqLite", b =>
@@ -59,7 +71,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                     b.HasIndex("SeasonID", "EpisodeNumber")
                         .IsUnique();
 
-                    b.ToTable("Episode");
+                    b.ToTable("Episodes");
                 });
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.SeasonSqLite", b =>
@@ -78,7 +90,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                     b.HasIndex("ShowID", "SeasonNumber")
                         .IsUnique();
 
-                    b.ToTable("Season");
+                    b.ToTable("Seasons");
                 });
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.ShowSqLite", b =>
@@ -96,7 +108,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Show");
+                    b.ToTable("Shows");
                 });
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.EpisodeSqLite", b =>

@@ -37,7 +37,7 @@ namespace TraktDl.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient(typeof(IDatabase), typeof(TraktDl.Business.Mock.Database.MockDatabase));
+            services.AddTransient(typeof(IDatabase), typeof(Business.Database.SqLite.SqLiteDatabase));
 
             services.AddTransient(typeof(ITraktApiClient), typeof(TraktDl.Business.Remote.Trakt.TraktApiClientSandbox));
             services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Remote.Trakt.TraktApi));

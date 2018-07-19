@@ -1,5 +1,4 @@
-﻿using Docker.AutoDl.Database.SqLite;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace TraktDl.Business.Database.SqLite
 {

@@ -29,7 +29,7 @@ namespace TraktDl.Business.Remote.Trakt
 
         private TraktClient Client { get; set; }
 
-        private string ConfigPath => Path.Combine(Directory.GetCurrentDirectory(), Client.Configuration.UseSandboxEnvironment ? "Sandbox" : "", "trakt.json");
+        private string ApiKeyName => Client.Configuration.UseSandboxEnvironment ? "Trakt.Sandbox" : "Trakt";
 
         public TraktApi(ITraktApiClient client, IDatabase database)
         {
@@ -98,15 +98,16 @@ namespace TraktDl.Business.Remote.Trakt
 
         private void SaveAuthToken(TraktToken token)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath));
-            File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(token));
+            Database.AddApiKey(new ApiKey { Id = ApiKeyName, ApiData = JsonConvert.SerializeObject(token) });
         }
 
         private TraktToken GetAuthToken()
         {
-            if (File.Exists(ConfigPath))
+            var key = Database.ApiKeys.SingleOrDefault(k => k.Id == ApiKeyName);
+
+            if (key != null)
             {
-                return JsonConvert.DeserializeObject<TraktToken>(File.ReadAllText(ConfigPath));
+                return JsonConvert.DeserializeObject<TraktToken>(key.ApiData);
             }
 
             return null;
