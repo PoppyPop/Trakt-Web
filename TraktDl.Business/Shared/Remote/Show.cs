@@ -10,6 +10,8 @@ namespace TraktDl.Business.Shared.Remote
 
         public int? Year { get; set; }
 
+        public bool Blacklisted { get; set; }
+
         public Dictionary<string, string> Providers { get; set; }
 
         public List<Season> Seasons { get; set; }
@@ -18,6 +20,7 @@ namespace TraktDl.Business.Shared.Remote
         {
             Providers = new Dictionary<string, string>();
             Seasons = new List<Season>();
+            Blacklisted = false;
         }
     }
 }

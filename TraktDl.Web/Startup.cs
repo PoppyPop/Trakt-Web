@@ -40,7 +40,9 @@ namespace TraktDl.Web
             services.AddTransient(typeof(IDatabase), typeof(Business.Database.SqLite.SqLiteDatabase));
 
             services.AddTransient(typeof(ITraktApiClient), typeof(TraktDl.Business.Remote.Trakt.TraktApiClientSandbox));
-            services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Remote.Trakt.TraktApi));
+
+            //services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Remote.Trakt.TraktApi));
+            services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Mock.Remote.Trakt.TraktApi));
 
         }
 

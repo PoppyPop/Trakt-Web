@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TraktDl.Business.Shared.Database;
+using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Business.Database.SqLite
 {
@@ -23,6 +24,8 @@ namespace TraktDl.Business.Database.SqLite
 
         public List<ApiKey> ApiKeys => context.ApiKeys.Select(b => b.Convert()).ToList();
 
+        public List<Show> Shows => context.Shows.Select(b => b.Convert()).ToList();
+
         public void AddApiKey(ApiKey apiKey)
         {
             var exist = context.ApiKeys.SingleOrDefault(b => b.Id == apiKey.Id);
@@ -34,6 +37,40 @@ namespace TraktDl.Business.Database.SqLite
             else
             {
                 exist.ApiData = apiKey.ApiData;
+            }
+
+            context.SaveChanges();
+        }
+
+        public void AddOrUpdateShows(List<Show> shows)
+        {
+            foreach (var show in shows)
+            {
+                var bddShow = context.Shows.SingleOrDefault(b => b.Id == show.Id);
+
+                if (bddShow == null)
+                {
+                    context.Shows.Add(new ShowSqLite(show));
+
+                }
+                else
+                {
+                    bddShow.Update(show);
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        public List<Episode> GetMissingEpisode() => context.Episodes.Where(e => e.Status == EpisodeStatusSqLite.Missing).Select(e => e.Convert())
+            .ToList();
+
+        public void ClearMissingEpisodes()
+        {
+            var episodes = context.Episodes.Where(e => e.Status == EpisodeStatusSqLite.Missing);
+            foreach (var episodeSqLite in episodes)
+            {
+                episodeSqLite.Status = EpisodeStatusSqLite.Unknown;
             }
 
             context.SaveChanges();

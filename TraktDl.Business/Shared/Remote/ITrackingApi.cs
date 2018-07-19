@@ -10,6 +10,6 @@ namespace TraktDl.Business.Shared.Remote
         /// Get the missing episodes
         /// </summary>
         /// <returns></returns>
-        List<Show> GetMissingEpisodes();
+        bool RefreshMissingEpisodes();
     }
 }

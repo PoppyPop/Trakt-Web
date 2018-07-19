@@ -38,10 +38,10 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                 name: "Shows",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    TraktShowId = table.Column<uint>(nullable: false),
+                    Id = table.Column<uint>(nullable: false),
                     Blacklisted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
+                    Year = table.Column<int>(nullable: true),
                     PosterUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -54,8 +54,8 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ShowID = table.Column<Guid>(nullable: false),
-                    SeasonNumber = table.Column<uint>(nullable: false),
+                    ShowID = table.Column<uint>(nullable: false),
+                    SeasonNumber = table.Column<int>(nullable: false),
                     Blacklisted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -75,8 +75,8 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     SeasonID = table.Column<Guid>(nullable: false),
-                    EpisodeNumber = table.Column<uint>(nullable: false),
-                    Blacklisted = table.Column<bool>(nullable: false),
+                    EpisodeNumber = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     PosterUrl = table.Column<string>(nullable: true)
                 },

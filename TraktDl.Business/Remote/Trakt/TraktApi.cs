@@ -113,30 +113,111 @@ namespace TraktDl.Business.Remote.Trakt
             return null;
         }
 
-        private async Task RefreshHiddenItem()
+        private void RefreshHiddenItem()
         {
-            var hiddenShow = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Show).ConfigureAwait(false);
+            var showRefresh = RefreshShowHiddenItem();
 
-            TraktPagedResponse<ITraktUserHiddenItem> watchedRes = hiddenShow;
+            var seasonRefresh = RefreshSeasonHiddenItem();
 
-            foreach (ITraktUserHiddenItem traktUserHiddenItem in watchedRes)
+            Task.WaitAll(showRefresh, seasonRefresh);
+        }
+
+        private async Task RefreshShowHiddenItem()
+        {
+            var hiddenShow = await Client.Users
+                .GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Show)
+                .ConfigureAwait(false);
+
+            TraktPagedResponse<ITraktUserHiddenItem> hiddenShowRes = hiddenShow;
+
+            foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenShowRes)
             {
-                var traktShow = traktUserHiddenItem.Show;
+                var localShow = GetShow(traktUserHiddenItem);
 
-                // Store hidden season
-                var show = new BlackListShow
-                {
-                    TraktShowId = traktShow.Ids.Trakt,
-                    Entire = true,
-                    SerieName = traktShow.Title
-                };
-                Database.AddBlackList(show);
+                localShow.Blacklisted = true;
+
+                // Store hidden show
+                Database.AddOrUpdateShows(new List<Show> { localShow });
             }
         }
 
-        public List<Show> GetMissingEpisodes()
+        private async Task RefreshSeasonHiddenItem()
         {
-            RefreshHiddenItem().Wait();
+            var hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
+
+            TraktPagedResponse<ITraktUserHiddenItem> hiddenSeasonRes = hiddenSeason;
+
+            foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenSeasonRes)
+            {
+                var localShow = GetShow(traktUserHiddenItem);
+
+                var localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
+
+                localSeason.Blacklisted = true;
+
+                // Store hidden show
+                Database.AddOrUpdateShows(new List<Show> { localShow });
+            }
+        }
+
+        private Show GetShow(ITraktUserHiddenItem hiddenItem)
+        {
+            var traktShow = hiddenItem.Show;
+
+            var localShow = Database.Shows.SingleOrDefault(s => s.Id == traktShow.Ids.Trakt);
+
+            if (localShow == null)
+            {
+                localShow = new Show
+                {
+                    Id = traktShow.Ids.Trakt,
+                    Blacklisted = true,
+                    SerieName = traktShow.Title
+                };
+            }
+
+            return localShow;
+        }
+
+        private Season GetSeason(Show show, int seasonNumber)
+        {
+            var localSeason = show.Seasons.SingleOrDefault(s => s.SeasonNumber == seasonNumber);
+
+            if (localSeason == null)
+            {
+                localSeason = new Season(Guid.NewGuid(), show)
+                {
+                    Blacklisted = true,
+                    SeasonNumber = seasonNumber,
+                };
+            }
+
+            return localSeason;
+        }
+
+        private Episode GetEpisode(Season season, int episodeNumber)
+        {
+            var localEpisode = season.Episodes.SingleOrDefault(s => s.EpisodeNumber == episodeNumber);
+
+            if (localEpisode == null)
+            {
+                localEpisode = new Episode(Guid.NewGuid(), season)
+                {
+                    EpisodeNumber = episodeNumber,
+                    Status = EpisodeStatus.Unknown,
+                };
+            }
+
+            return localEpisode;
+        }
+
+
+        public bool RefreshMissingEpisodes()
+        {
+            RefreshHiddenItem();
+
+            // Set all missing to unknown
+            Database.ClearMissingEpisodes();
 
             var collected = Client.Users.GetCollectionShowsAsync("me", new TraktExtendedInfo { Full = true });
             var watched = Client.Users.GetWatchedShowsAsync("me", new TraktExtendedInfo { Full = true });
@@ -166,11 +247,11 @@ namespace TraktDl.Business.Remote.Trakt
 
                 foreach (ITraktWatchedShowSeason season in traktWatchedShow.WatchedSeasons)
                 {
-                    var traktSeason = new TraktSeason { Season = season.Number };
+                    var traktSeason = new TraktSeason { Season = season.Number.Value };
 
                     foreach (ITraktWatchedShowEpisode episode in season.Episodes)
                     {
-                        traktSeason.MissingEpisodes.Add(new MissingEpisode { Episode = episode.Number, Watched = true });
+                        traktSeason.MissingEpisodes.Add(new TraktEpisode { Episode = episode.Number.Value, Watched = true });
                     }
 
                     show.Seasons.Add(traktSeason);
@@ -208,7 +289,7 @@ namespace TraktDl.Business.Remote.Trakt
                     var misSeason = show.Seasons.SingleOrDefault(e => e.Season == season.Number);
                     if (misSeason == null)
                     {
-                        misSeason = new TraktSeason { Season = season.Number };
+                        misSeason = new TraktSeason { Season = season.Number.Value };
                         show.Seasons.Add(misSeason);
                     }
 
@@ -221,7 +302,7 @@ namespace TraktDl.Business.Remote.Trakt
                         }
                         else
                         {
-                            misSeason.MissingEpisodes.Add(new MissingEpisode { Episode = episode.Number, Collected = true });
+                            misSeason.MissingEpisodes.Add(new TraktEpisode { Episode = episode.Number.Value, Collected = true });
                         }
                     }
                 }
@@ -229,29 +310,34 @@ namespace TraktDl.Business.Remote.Trakt
 
             shows.RemoveAll(s => s.Watched);
 
-            // Prepare blacklist
-            List<BlackListShow> blackList = Database.BlackLists;
+            // PrepareDB 
+            List<Show> bddShows = Database.Shows;
+            List<Show> updateShows = new List<Show>();
 
             // Remove Show blacklist
-            shows.RemoveAll(s => blackList.Any(b => b.TraktShowId == s.Id && b.Entire));
+            shows.RemoveAll(s => bddShows.Any(b => b.Id == s.Id && b.Blacklisted));
             List<Task> tasks = new List<Task>();
 
             foreach (TraktShow traktShow in shows)
             {
-                tasks.Add(HandleProgress(traktShow, blackList));
+                var localShow = bddShows.SingleOrDefault(s => s.Id == traktShow.Id);
+                updateShows.Add(localShow);
+                tasks.Add(HandleProgress(traktShow, localShow));
             }
 
             Task.WaitAll(tasks.ToArray());
 
+            Database.AddOrUpdateShows(updateShows);
+
             shows.RemoveAll(s => !s.Seasons.Any());
 
-            return shows.Select(s => (Show)s).ToList();
+            return true;
         }
 
-        private async Task HandleProgress(TraktShow traktShow, List<BlackListShow> blackList)
+        private async Task HandleProgress(TraktShow traktShow, Show bddShow)
         {
             // Remove Season blacklist
-            traktShow.Seasons.RemoveAll(s => blackList.Any(b => b.TraktShowId == traktShow.Id && b.Season == s.Season));
+            traktShow.Seasons.RemoveAll(s => bddShow.Seasons.Any(b => b.SeasonNumber == s.Season && b.Blacklisted));
 
             if (traktShow.Seasons.Any())
             {
@@ -265,7 +351,7 @@ namespace TraktDl.Business.Remote.Trakt
                     var misSeason = traktShow.Seasons.SingleOrDefault(e => e.Season == season.Number);
                     if (misSeason == null)
                     {
-                        misSeason = new TraktSeason { Season = season.Number };
+                        misSeason = new TraktSeason { Season = season.Number.Value };
                         traktShow.Seasons.Add(misSeason);
                     }
 
@@ -275,31 +361,15 @@ namespace TraktDl.Business.Remote.Trakt
                         // Already existing in missing
                         if (misSeason.MissingEpisodes.All(m => m.Episode != episode.Number))
                         {
-                            misSeason.MissingEpisodes.Add(new MissingEpisode { Episode = episode.Number });
+                            misSeason.MissingEpisodes.Add(new TraktEpisode { Episode = episode.Number.Value });
                         }
-                    }
-                }
-
-                foreach (ITraktSeason season in collectionProgressRes.Value.HiddenSeasons)
-                {
-                    TraktSeason traktSeason = traktShow.Seasons.SingleOrDefault(e => e.Season == season.Number);
-                    if (traktSeason != null)
-                    {
-                        // Store hidden season
-                        var show = new BlackListShow
-                        {
-                            TraktShowId = traktShow.Id,
-                            Season = season.Number,
-                            SerieName = traktShow.SerieName
-                        };
-                        Database.AddBlackList(show);
-
-                        traktSeason.Hidden = true;
                     }
                 }
 
                 foreach (var showSeason in traktShow.Seasons)
                 {
+                    var season = GetSeason(bddShow, showSeason.Season);
+
                     // Remove watched from missing
                     showSeason.MissingEpisodes.RemoveAll(m => m.Watched);
 
@@ -309,18 +379,16 @@ namespace TraktDl.Business.Remote.Trakt
                     // BlackList Ended series if complete
                     if ((traktShow.Status == TraktShowStatus.Ended || traktShow.Status == TraktShowStatus.Canceled) && !showSeason.MissingEpisodes.Any())
                     {
-                        // Store hidden season
-                        var show = new BlackListShow
-                        {
-                            TraktShowId = traktShow.Id,
-                            Season = showSeason.Season,
-                            SerieName = traktShow.SerieName
-                        };
-                        Database.AddBlackList(show);
+                        season.Blacklisted = true;
+                    }
+
+                    // Save missing episode
+                    foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
+                    {
+                        var ep = GetEpisode(season, missingEpisode.Episode);
+                        ep.Status = EpisodeStatus.Missing;
                     }
                 }
-
-                traktShow.Seasons.RemoveAll(s => s.Hidden);
 
                 traktShow.Seasons.RemoveAll(s => !s.MissingEpisodes.Any());
             }

@@ -6,9 +6,15 @@ namespace TraktDl.Business.Shared.Remote
 {
     public class Episode
     {
+        public Guid Id { get; }
+
+        public Season Season { get; }
+
         public int EpisodeNumber { get; set; }
 
         public string Name { get; set; }
+
+        public EpisodeStatus Status { get; set; }
 
         public Dictionary<string, string> Providers { get; set; }
 
@@ -16,5 +22,18 @@ namespace TraktDl.Business.Shared.Remote
         {
             Providers = new Dictionary<string, string>();
         }
+
+        public Episode(Guid id, Season season) : this()
+        {
+            Id = id;
+            Season = season;
+        }
+    }
+
+    public enum EpisodeStatus
+    {
+        Unknown,
+        Collected,
+        Missing
     }
 }

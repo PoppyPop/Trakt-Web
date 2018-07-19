@@ -31,6 +31,8 @@ namespace TraktDl.Business.Database.SqLite
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=AutoDl.db");
+
+            optionsBuilder.EnableSensitiveDataLogging();
         }
     }
 }

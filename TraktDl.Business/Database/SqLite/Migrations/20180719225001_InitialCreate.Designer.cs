@@ -9,7 +9,7 @@ using TraktDl.Business.Database.SqLite;
 namespace TraktDl.Business.Database.SqLite.Migrations
 {
     [DbContext(typeof(SqLiteContext))]
-    [Migration("20180719111930_InitialCreate")]
+    [Migration("20180719225001_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,15 +56,15 @@ namespace TraktDl.Business.Database.SqLite.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("Blacklisted");
-
-                    b.Property<uint>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber");
 
                     b.Property<string>("Name");
 
                     b.Property<string>("PosterUrl");
 
                     b.Property<Guid>("SeasonID");
+
+                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
@@ -81,9 +81,9 @@ namespace TraktDl.Business.Database.SqLite.Migrations
 
                     b.Property<bool>("Blacklisted");
 
-                    b.Property<uint>("SeasonNumber");
+                    b.Property<int>("SeasonNumber");
 
-                    b.Property<Guid>("ShowID");
+                    b.Property<uint>("ShowID");
 
                     b.HasKey("Id");
 
@@ -95,8 +95,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
 
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.ShowSqLite", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<uint>("Id");
 
                     b.Property<bool>("Blacklisted");
 
@@ -104,7 +103,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
 
                     b.Property<string>("PosterUrl");
 
-                    b.Property<uint>("TraktShowId");
+                    b.Property<int?>("Year");
 
                     b.HasKey("Id");
 
@@ -114,7 +113,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.EpisodeSqLite", b =>
                 {
                     b.HasOne("TraktDl.Business.Database.SqLite.SeasonSqLite", "Season")
-                        .WithMany()
+                        .WithMany("Episodes")
                         .HasForeignKey("SeasonID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -122,7 +121,7 @@ namespace TraktDl.Business.Database.SqLite.Migrations
             modelBuilder.Entity("TraktDl.Business.Database.SqLite.SeasonSqLite", b =>
                 {
                     b.HasOne("TraktDl.Business.Database.SqLite.ShowSqLite", "Show")
-                        .WithMany()
+                        .WithMany("Seasons")
                         .HasForeignKey("ShowID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

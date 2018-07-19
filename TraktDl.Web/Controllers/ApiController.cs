@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 using TraktDl.Web.Models;
 
@@ -11,27 +12,34 @@ namespace TraktDl.Web.Controllers
     public class TrackingController : ControllerBase
     {
         private readonly ITrackingApi _trackingApi;
+        private readonly IDatabase _database;
 
-        public TrackingController(ITrackingApi trackingApi)
+        public TrackingController(ITrackingApi trackingApi, IDatabase database)
         {
             _trackingApi = trackingApi;
+            _database = database;
         }
 
         // GET api/Tracking
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var missing = _trackingApi.GetMissingEpisodes();
+            var missings = _database.GetMissingEpisode();
 
             List<string> res = new List<string>();
 
-            foreach (Show show in missing)
+            foreach (var missing in missings)
             {
-                res.Add(show.SerieName);
+                res.Add(missing.Season.Show.SerieName);
             }
 
-
             return res;
+        }
+
+        [HttpPost]
+        public ActionResult<bool> Refresh()
+        {
+            return _trackingApi.RefreshMissingEpisodes();
         }
 
     }
