@@ -1,3 +1,3 @@
-dotnet ef migrations add InitialCreate -o Database\SqLite\Migrations -p ../../Docker.AutoDl.csproj -s ../../Docker.AutoDl.csproj
+dotnet ef migrations add InitialCreate -o Database\SqLite\Migrations -p ../../TraktDl.Business.csproj -s ../../TraktDl.Business.csproj
 
 PAUSE

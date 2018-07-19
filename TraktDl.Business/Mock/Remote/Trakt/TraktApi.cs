@@ -14,7 +14,7 @@ namespace TraktDl.Business.Mock.Remote.Trakt
             Season season = new Season
             {
                 SeasonNumber = 2,
-                MissingEpisodes = new List<int> {3,4,5 }
+                MissingEpisodes = new List<Episode> { new Episode { EpisodeNumber = 3 }, new Episode { EpisodeNumber = 4 }, new Episode { EpisodeNumber = 5 } }
             };
 
             result.Add(new Show

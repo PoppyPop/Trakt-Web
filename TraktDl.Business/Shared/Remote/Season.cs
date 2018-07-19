@@ -6,11 +6,11 @@ namespace TraktDl.Business.Shared.Remote
     {
         public int? SeasonNumber { get; set; }
 
-        public List<int> MissingEpisodes { get; set; }
+        public List<Episode> MissingEpisodes { get; set; }
 
         public Season()
         {
-            MissingEpisodes = new List<int>();
+            MissingEpisodes = new List<Episode>();
         }
     }
 }

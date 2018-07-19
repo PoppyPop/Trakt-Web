@@ -22,7 +22,7 @@ namespace TraktDl.Business.Remote.Trakt
             var season = new Season()
             {
                 SeasonNumber = trakt.Season,
-                MissingEpisodes = trakt.MissingEpisodes.Where(e => e.Episode.HasValue).Select(e => e.Episode.Value).ToList()
+                MissingEpisodes = trakt.MissingEpisodes.Where(e => e.Episode.HasValue).Select(e => new Episode { EpisodeNumber = e.Episode.Value }).ToList()
             };
 
             return season;

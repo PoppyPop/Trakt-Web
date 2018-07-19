@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TraktDl.Business.Remote.Trakt;
+using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Web
@@ -36,8 +37,10 @@ namespace TraktDl.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddTransient(typeof(IDatabase), typeof(TraktDl.Business.Mock.Database.MockDatabase));
+
             services.AddTransient(typeof(ITraktApiClient), typeof(TraktDl.Business.Remote.Trakt.TraktApiClientSandbox));
-            services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Mock.Remote.Trakt.TraktApi));
+            services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Remote.Trakt.TraktApi));
 
         }
 
@@ -51,10 +54,10 @@ namespace TraktDl.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                //app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
