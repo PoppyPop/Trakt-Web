@@ -18,34 +18,34 @@ namespace TraktDl.Business.Database.SqLite
 
         public List<BlackListShow> BlackLists
         {
-            get { return context.BlackListShow.Select(b => b.Convert()).ToList(); }
+            get { return context.BlackListShows.Select(b => b.Convert()).ToList(); }
         }
 
         public void AddBlackList(BlackListShow blackListShow)
         {
-            var exist = context.BlackListShow.Any(b => b.TraktShowId == blackListShow.TraktShowId && b.Season == blackListShow.Season && b.Entire == blackListShow.Entire);
+            var exist = context.BlackListShows.Any(b => b.TraktShowId == blackListShow.TraktShowId && b.Season == blackListShow.Season && b.Entire == blackListShow.Entire);
 
             if (!exist)
             {
-                context.BlackListShow.Add(new BlackListShowSqLite(blackListShow));
+                context.BlackListShows.Add(new BlackListShowSqLite(blackListShow));
                 context.SaveChanges();
             }
         }
 
         public void RemoveBlackList(BlackListShow blackListShow)
         {
-            var toRemove = context.BlackListShow.SingleOrDefault(b => b.Id == blackListShow.Id);
+            var toRemove = context.BlackListShows.SingleOrDefault(b => b.Id == blackListShow.Id);
 
             if (toRemove != null)
             {
-                context.BlackListShow.Remove(toRemove);
+                context.BlackListShows.Remove(toRemove);
                 context.SaveChanges();
             }
         }
 
         public void ClearBlackList()
         {
-            context.BlackListShow.ToList().ForEach(x => context.BlackListShow.Remove(x));
+            context.BlackListShows.ToList().ForEach(x => context.BlackListShows.Remove(x));
             context.SaveChanges();
         }
     }
