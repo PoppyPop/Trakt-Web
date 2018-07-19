@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakt.Web", "Trakt.Web\Trakt.Web.csproj", "{3C87EC80-FD66-4D22-AA49-27A53E4976CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trakt.Business", "Trakt.Business\Trakt.Business.csproj", "{746E8E17-163E-47B1-9321-A83065215E67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C87EC80-FD66-4D22-AA49-27A53E4976CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C87EC80-FD66-4D22-AA49-27A53E4976CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C87EC80-FD66-4D22-AA49-27A53E4976CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C87EC80-FD66-4D22-AA49-27A53E4976CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{746E8E17-163E-47B1-9321-A83065215E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{746E8E17-163E-47B1-9321-A83065215E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{746E8E17-163E-47B1-9321-A83065215E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{746E8E17-163E-47B1-9321-A83065215E67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B69077B0-CE01-411D-9A00-0D02125B0C3A}
+	EndGlobalSection
+EndGlobal
