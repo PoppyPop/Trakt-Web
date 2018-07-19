@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Trakt.Web.Models;
+using TraktDl.Web.Models;
 
-namespace Trakt.Web.Controllers
+namespace TraktDl.Web.Controllers
 {
     public class HomeController : Controller
     {

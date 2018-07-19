@@ -1,6 +1,6 @@
 using System;
 
-namespace Trakt.Web.Models
+namespace TraktDl.Web.Models
 {
     public class ErrorViewModel
     {

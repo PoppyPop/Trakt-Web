@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TraktDl.Business.Remote.Trakt;
+using TraktDl.Business.Shared.Remote;
 
-namespace Trakt.Web
+namespace TraktDl.Web
 {
     public class Startup
     {
@@ -33,6 +35,10 @@ namespace Trakt.Web
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddTransient(typeof(ITraktApiClient), typeof(TraktDl.Business.Remote.Trakt.TraktApiClientSandbox));
+            services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Mock.Remote.Trakt.TraktApi));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
