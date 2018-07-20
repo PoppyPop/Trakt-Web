@@ -8,8 +8,6 @@ namespace TraktDl.Business.Shared.Remote
     {
         public Guid Id { get; }
 
-        public Show Show { get; }
-
         public int SeasonNumber { get; set; }
 
         public bool Blacklisted { get; set; }
@@ -23,10 +21,9 @@ namespace TraktDl.Business.Shared.Remote
             Episodes = new List<Episode>();
         }
 
-        public Season(Guid id, Show show) : this()
+        public Season(Guid id) : this()
         {
             Id = id;
-            Show = show;
         }
     }
 }

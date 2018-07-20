@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
@@ -15,11 +18,6 @@ namespace TraktDl.Business.Database.SqLite
             context = new SqLiteContext();
 
             context.Database.Migrate();
-        }
-
-        public List<BlackListShow> BlackLists
-        {
-            get { return context.BlackListShows.Select(b => b.Convert()).ToList(); }
         }
 
         public List<ApiKey> ApiKeys => context.ApiKeys.Select(b => b.Convert()).ToList();
@@ -62,8 +60,17 @@ namespace TraktDl.Business.Database.SqLite
             context.SaveChanges();
         }
 
-        public List<Episode> GetMissingEpisode() => context.Episodes.Where(e => e.Status == EpisodeStatusSqLite.Missing).Select(e => e.Convert())
-            .ToList();
+        public List<Show> GetMissingEpisode()
+        {
+            var res = context.Shows
+                .Join(context.Seasons, show => show.Id, season => season.ShowID, (show, season) => new { show, season })
+                .Where(s => s.season.Episodes.Any(ep => ep.Status == EpisodeStatusSqLite.Missing))
+                .Select(s => s.show).ToList();
+
+
+            return res.Select(s => s.Convert()).ToList();
+        }
+
 
         public void ClearMissingEpisodes()
         {
@@ -73,34 +80,6 @@ namespace TraktDl.Business.Database.SqLite
                 episodeSqLite.Status = EpisodeStatusSqLite.Unknown;
             }
 
-            context.SaveChanges();
-        }
-
-        public void AddBlackList(BlackListShow blackListShow)
-        {
-            var exist = context.BlackListShows.Any(b => b.TraktShowId == blackListShow.TraktShowId && b.Season == blackListShow.Season && b.Entire == blackListShow.Entire);
-
-            if (!exist)
-            {
-                context.BlackListShows.Add(new BlackListShowSqLite(blackListShow));
-                context.SaveChanges();
-            }
-        }
-
-        public void RemoveBlackList(BlackListShow blackListShow)
-        {
-            var toRemove = context.BlackListShows.SingleOrDefault(b => b.Id == blackListShow.Id);
-
-            if (toRemove != null)
-            {
-                context.BlackListShows.Remove(toRemove);
-                context.SaveChanges();
-            }
-        }
-
-        public void ClearBlackList()
-        {
-            context.BlackListShows.ToList().ForEach(x => context.BlackListShows.Remove(x));
             context.SaveChanges();
         }
     }

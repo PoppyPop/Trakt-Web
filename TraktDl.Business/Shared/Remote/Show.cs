@@ -16,6 +16,8 @@ namespace TraktDl.Business.Shared.Remote
 
         public List<Season> Seasons { get; set; }
 
+        public string PosterUrl { get; set; }
+
         public Show()
         {
             Providers = new Dictionary<string, string>();

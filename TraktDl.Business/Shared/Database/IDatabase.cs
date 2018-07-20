@@ -5,7 +5,6 @@ namespace TraktDl.Business.Shared.Database
 {
     public interface IDatabase
     {
-        List<BlackListShow> BlackLists { get; }
         List<ApiKey> ApiKeys { get; }
 
         List<Show> Shows { get; }
@@ -14,10 +13,8 @@ namespace TraktDl.Business.Shared.Database
 
         void AddOrUpdateShows(List<Show> shows);
 
-        List<Episode> GetMissingEpisode();
+        List<Show> GetMissingEpisode();
 
         void ClearMissingEpisodes();
-
-        void AddBlackList(BlackListShow blackListShow);
     }
 }

@@ -27,15 +27,15 @@ namespace TraktDl.Business.Mock.Remote.Trakt
                 Providers = new Dictionary<string, string> { { "Imdb", "tt0475784" }, { "Tmdb", "63247" } },
             };
 
-            Season season = new Season(Guid.NewGuid(), show)
+            Season season = new Season(Guid.NewGuid())
             {
                 SeasonNumber = 2,
             };
             season.Episodes = new List<Episode>
             {
-                new Episode(Guid.NewGuid(), season) {EpisodeNumber = 3, Status = EpisodeStatus.Missing},
-                new Episode(Guid.NewGuid(), season) {EpisodeNumber = 4, Status = EpisodeStatus.Missing},
-                new Episode(Guid.NewGuid(), season) {EpisodeNumber = 5, Status = EpisodeStatus.Collected}
+                new Episode(Guid.NewGuid()) {EpisodeNumber = 3, Status = EpisodeStatus.Missing},
+                new Episode(Guid.NewGuid()) {EpisodeNumber = 4, Status = EpisodeStatus.Missing},
+                new Episode(Guid.NewGuid()) {EpisodeNumber = 5, Status = EpisodeStatus.Collected}
             };
 
             show.Seasons = new List<Season> { season };

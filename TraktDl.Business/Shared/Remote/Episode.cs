@@ -8,8 +8,6 @@ namespace TraktDl.Business.Shared.Remote
     {
         public Guid Id { get; }
 
-        public Season Season { get; }
-
         public int EpisodeNumber { get; set; }
 
         public string Name { get; set; }
@@ -18,15 +16,16 @@ namespace TraktDl.Business.Shared.Remote
 
         public Dictionary<string, string> Providers { get; set; }
 
+        public string PosterUrl { get; set; }
+
         public Episode()
         {
             Providers = new Dictionary<string, string>();
         }
 
-        public Episode(Guid id, Season season) : this()
+        public Episode(Guid id) : this()
         {
             Id = id;
-            Season = season;
         }
     }
 

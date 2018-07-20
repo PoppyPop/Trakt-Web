@@ -29,9 +29,9 @@ namespace TraktDl.Business.Mock.Database
             Shows.AddRange(shows);
         }
 
-        public List<Episode> GetMissingEpisode()
+        public List<Show> GetMissingEpisode()
         {
-            var res = new List<Episode>();
+            var res = new List<Show>();
 
             foreach (var show in Shows)
             {
@@ -40,7 +40,7 @@ namespace TraktDl.Business.Mock.Database
                     foreach (var episode in season.Episodes)
                     {
                         if (episode.Status == EpisodeStatus.Missing)
-                            res.Add(episode);
+                            res.Add(show);
                     }
                 }
             }

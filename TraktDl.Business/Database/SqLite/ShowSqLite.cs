@@ -23,7 +23,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public virtual string PosterUrl { get; set; }
 
-        public ICollection<SeasonSqLite> Seasons { get; set; }
+        public virtual List<SeasonSqLite> Seasons { get; set; }
 
 
         public virtual string ProvidersData
@@ -46,7 +46,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public ShowSqLite()
         {
-            Seasons = new List<SeasonSqLite>();
+            Providers = new Dictionary<string, string>();
         }
 
         public ShowSqLite(Shared.Remote.Show show) : this()
@@ -61,6 +61,7 @@ namespace TraktDl.Business.Database.SqLite
             Providers = show.Providers;
             Blacklisted = show.Blacklisted;
             Year = show.Year;
+            PosterUrl = show.PosterUrl;
 
             foreach (Season showSeason in show.Seasons)
             {
@@ -84,27 +85,27 @@ namespace TraktDl.Business.Database.SqLite
                 Blacklisted = Blacklisted,
                 SerieName = Name,
                 Year = Year,
-                Seasons = Seasons.Select(s => s.Convert()).ToList(),
                 Providers = Providers,
+                PosterUrl = PosterUrl,
+                Seasons = Seasons.Select(s => s.Convert()).ToList(),
             };
+
 
             return show;
         }
-
-
     }
+
     public class SeasonSqLite
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual Guid Id { get; set; }
 
-        [ForeignKey("Show")]
         public virtual uint ShowID { get; set; }
         public virtual ShowSqLite Show { get; set; }
 
         public virtual int SeasonNumber { get; set; }
 
-        public virtual ICollection<EpisodeSqLite> Episodes { get; set; }
+        public virtual List<EpisodeSqLite> Episodes { get; set; }
 
         [Required]
         public virtual bool Blacklisted { get; set; }
@@ -112,7 +113,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public SeasonSqLite()
         {
-            Episodes = new List<EpisodeSqLite>();
+
         }
 
         public SeasonSqLite(Shared.Remote.Season season, ShowSqLite show) : this()
@@ -145,12 +146,13 @@ namespace TraktDl.Business.Database.SqLite
 
         public Shared.Remote.Season Convert()
         {
-            Shared.Remote.Season season = new Shared.Remote.Season(Id, Show.Convert())
+            Shared.Remote.Season season = new Shared.Remote.Season(Id)
             {
                 SeasonNumber = SeasonNumber,
                 Blacklisted = Blacklisted,
-                Episodes = Episodes.Select(s => s.Convert()).ToList()
+                Episodes = Episodes.Select(s => s.Convert()).ToList(),
             };
+
 
             return season;
         }
@@ -161,7 +163,6 @@ namespace TraktDl.Business.Database.SqLite
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual Guid Id { get; set; }
 
-        [ForeignKey("Season")]
         public virtual Guid SeasonID { get; set; }
         public virtual SeasonSqLite Season { get; set; }
 
@@ -177,7 +178,12 @@ namespace TraktDl.Business.Database.SqLite
         public virtual string ProvidersData
         {
             get => JsonConvert.SerializeObject(Providers);
-            set => Providers = JsonConvert.DeserializeObject<Dictionary<string, string>>(value);
+            set
+            {
+                Providers = new Dictionary<string, string>();
+                if (!string.IsNullOrEmpty(value))
+                    Providers = JsonConvert.DeserializeObject<Dictionary<string, string>>(value);
+            }
         }
 
         /// <summary>
@@ -189,10 +195,10 @@ namespace TraktDl.Business.Database.SqLite
 
         public EpisodeSqLite()
         {
-
+            Providers = new Dictionary<string, string>();
         }
 
-        public EpisodeSqLite(Shared.Remote.Episode episode, SeasonSqLite season)
+        public EpisodeSqLite(Shared.Remote.Episode episode, SeasonSqLite season) : this()
         {
             Id = episode.Id;
             Season = season;
@@ -204,18 +210,20 @@ namespace TraktDl.Business.Database.SqLite
         {
             EpisodeNumber = episode.EpisodeNumber;
             Providers = episode.Providers;
-            //Status = episode.Status
+            Status = (EpisodeStatusSqLite)Enum.Parse(typeof(EpisodeStatusSqLite),
+                Enum.GetName(typeof(EpisodeStatus), episode.Status));
             Name = episode.Name;
-
+            PosterUrl = episode.PosterUrl;
         }
 
         public Shared.Remote.Episode Convert()
         {
-            Shared.Remote.Episode episode = new Shared.Remote.Episode(Id, Season.Convert())
+            Shared.Remote.Episode episode = new Shared.Remote.Episode(Id)
             {
                 EpisodeNumber = EpisodeNumber,
                 Providers = Providers,
-            };
+                PosterUrl = PosterUrl,
+        };
 
             return episode;
         }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
-using TraktDl.Web.Models;
 
 namespace TraktDl.Web.Controllers
 {
@@ -22,18 +22,9 @@ namespace TraktDl.Web.Controllers
 
         // GET api/Tracking
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Show>> Get()
         {
-            var missings = _database.GetMissingEpisode();
-
-            List<string> res = new List<string>();
-
-            foreach (var missing in missings)
-            {
-                res.Add(missing.Season.Show.SerieName);
-            }
-
-            return res;
+            return _database.GetMissingEpisode();
         }
 
         [HttpPost]

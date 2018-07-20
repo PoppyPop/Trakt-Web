@@ -185,7 +185,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             if (localSeason == null)
             {
-                localSeason = new Season(Guid.NewGuid(), show)
+                localSeason = new Season(Guid.NewGuid())
                 {
                     Blacklisted = true,
                     SeasonNumber = seasonNumber,
@@ -201,7 +201,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             if (localEpisode == null)
             {
-                localEpisode = new Episode(Guid.NewGuid(), season)
+                localEpisode = new Episode(Guid.NewGuid())
                 {
                     EpisodeNumber = episodeNumber,
                     Status = EpisodeStatus.Unknown,
