@@ -11,5 +11,10 @@ namespace TraktDl.Business.Mock.Remote.Tmdb
         {
             
         }
+
+        public bool RefreshImages()
+        {
+            return true;
+        }
     }
 }

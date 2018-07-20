@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
@@ -12,12 +10,14 @@ namespace TraktDl.Web.Controllers
     public class TrackingController : ControllerBase
     {
         private readonly ITrackingApi _trackingApi;
+        private readonly IImageApi _imageApi;
         private readonly IDatabase _database;
 
-        public TrackingController(ITrackingApi trackingApi, IDatabase database)
+        public TrackingController(ITrackingApi trackingApi, IImageApi imageApi, IDatabase database)
         {
             _trackingApi = trackingApi;
             _database = database;
+            _imageApi = imageApi;
         }
 
         // GET api/Tracking
@@ -30,7 +30,11 @@ namespace TraktDl.Web.Controllers
         [HttpPost]
         public ActionResult<bool> Refresh()
         {
-            return _trackingApi.RefreshMissingEpisodes();
+            var resutRefresh = _trackingApi.RefreshMissingEpisodes();
+            if (resutRefresh)
+                return _imageApi.RefreshImages();
+
+            return false;
         }
 
     }

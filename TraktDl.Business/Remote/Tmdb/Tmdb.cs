@@ -15,5 +15,10 @@ namespace TraktDl.Business.Remote.Tmdb
             // The 100 48866
             client.GetTvEpisodeAsync(48866, 5, 1, TvEpisodeMethods.Undefined, "fr-FR");
         }
+
+        public bool RefreshImages()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

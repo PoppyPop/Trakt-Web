@@ -6,5 +6,6 @@ namespace TraktDl.Business.Shared.Remote
 {
     public interface IImageApi
     {
+        bool RefreshImages();
     }
 }
