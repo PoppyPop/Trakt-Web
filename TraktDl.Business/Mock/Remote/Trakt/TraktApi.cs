@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
@@ -18,40 +19,40 @@ namespace TraktDl.Business.Mock.Remote.Trakt
 
         public bool RefreshMissingEpisodes()
         {
-            List<Show> result = new List<Show>();
+            List<ShowSql> result = new List<ShowSql>();
 
-            var show = new Show
+            var show = new ShowSql
             {
                 Id = 99718,
-                SerieName = "Westworld",
+                Name = "Westworld",
                 Providers = new Dictionary<string, string> { { "Imdb", "tt0475784" }, { "Tmdb", "63247" } },
             };
 
-            Season season = new Season(Guid.NewGuid())
+            var season = new SeasonSql()
             {
                 SeasonNumber = 2,
             };
-            season.Episodes = new List<Episode>
+            season.Episodes = new List<EpisodeSql>
             {
-                new Episode(Guid.NewGuid()) {EpisodeNumber = 3, Status = EpisodeStatus.Missing},
-                new Episode(Guid.NewGuid()) {EpisodeNumber = 4, Status = EpisodeStatus.Missing},
-                new Episode(Guid.NewGuid()) {EpisodeNumber = 5, Status = EpisodeStatus.Collected}
+                new EpisodeSql() {EpisodeNumber = 3, Status = EpisodeStatusSqLite.Missing},
+                new EpisodeSql() {EpisodeNumber = 4, Status = EpisodeStatusSqLite.Missing},
+                new EpisodeSql() {EpisodeNumber = 5, Status = EpisodeStatusSqLite.Collected}
             };
 
-            show.Seasons = new List<Season> { season };
+            show.Seasons = new List<SeasonSql> { season };
 
             result.Add(show);
 
-            result.Add(new Show
+            result.Add(new ShowSql
             {
                 Id = 123,
-                SerieName = "z fake",
+                Name = "z fake",
             });
 
-            result.Add(new Show
+            result.Add(new ShowSql
             {
                 Id = 456,
-                SerieName = "9 fake",
+                Name = "9 fake",
             });
 
             Database.AddOrUpdateShows(result);

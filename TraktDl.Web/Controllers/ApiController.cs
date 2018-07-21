@@ -37,5 +37,12 @@ namespace TraktDl.Web.Controllers
             return false;
         }
 
+        [HttpPost]
+        [Route("ResetBlacklist")]
+        public ActionResult<bool> ResetBlacklist()
+        {
+            return _database.ResetBlacklist();
+        }
+
     }
 }

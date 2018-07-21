@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Business.Shared.Database
@@ -11,10 +12,12 @@ namespace TraktDl.Business.Shared.Database
 
         void AddApiKey(ApiKey apiKey);
 
-        void AddOrUpdateShows(List<Show> shows);
+        void AddOrUpdateShows(List<ShowSql> shows);
 
         List<Show> GetMissingEpisode();
 
         void ClearMissingEpisodes();
+
+        bool ResetBlacklist();
     }
 }

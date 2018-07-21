@@ -24,6 +24,8 @@ namespace TraktDl.Business.Database.SqLite
 
         public List<Show> Shows => context.Shows.Select(b => b.Convert()).ToList();
 
+        public IEnumerable<ShowSql> ShowsSql => context.Shows;
+
         public void AddApiKey(ApiKey apiKey)
         {
             var exist = context.ApiKeys.SingleOrDefault(b => b.Id == apiKey.Id);
@@ -40,7 +42,7 @@ namespace TraktDl.Business.Database.SqLite
             context.SaveChanges();
         }
 
-        public void AddOrUpdateShows(List<Show> shows)
+        public void AddOrUpdateShows(List<ShowSql> shows)
         {
             foreach (var show in shows)
             {
@@ -48,12 +50,7 @@ namespace TraktDl.Business.Database.SqLite
 
                 if (bddShow == null)
                 {
-                    context.Shows.Add(new ShowSqLite(show));
-
-                }
-                else
-                {
-                    bddShow.Update(show);
+                    context.Shows.Add(show);
                 }
             }
 
@@ -81,6 +78,25 @@ namespace TraktDl.Business.Database.SqLite
             }
 
             context.SaveChanges();
+        }
+
+        public bool ResetBlacklist()
+        {
+            var blacklistedShow = context.Shows.Where(s => s.Blacklisted);
+            foreach (var showSqLite in blacklistedShow)
+            {
+                showSqLite.Blacklisted = false;
+            }
+
+            var blacklistedSeason = context.Seasons.Where(s => s.Blacklisted);
+            foreach (var seasonSqLite in blacklistedSeason)
+            {
+                seasonSqLite.Blacklisted = false;
+            }
+
+            context.SaveChanges();
+
+            return true;
         }
     }
 }

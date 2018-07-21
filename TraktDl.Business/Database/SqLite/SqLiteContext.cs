@@ -9,34 +9,59 @@ namespace TraktDl.Business.Database.SqLite
     {
         public DbSet<ApiKeySqLite> ApiKeys { get; set; }
 
-        public DbSet<ShowSqLite> Shows { get; set; }
+        public DbSet<ShowSql> Shows { get; set; }
 
-        public DbSet<SeasonSqLite> Seasons { get; set; }
+        public DbSet<SeasonSql> Seasons { get; set; }
 
-        public DbSet<EpisodeSqLite> Episodes { get; set; }
+        public DbSet<EpisodeSql> Episodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ShowSql>()
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<ShowSql>()
+                .Property(s => s.Id).ValueGeneratedNever();
 
-            modelBuilder.Entity<SeasonSqLite>()
-                .HasIndex(b => new { b.ShowID, b.SeasonNumber })
+            modelBuilder.Entity<ShowSql>()
+                .Ignore(s => s.Providers)
+                .Property(s => s.Blacklisted).IsRequired();
+
+
+            modelBuilder.Entity<SeasonSql>()
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<SeasonSql>()
+                .Property(s => s.Id).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<SeasonSql>()
+                .Property(s => s.Blacklisted).IsRequired();
+
+            modelBuilder.Entity<SeasonSql>()
+                .HasIndex(s => new { s.ShowID, s.SeasonNumber })
                 .IsUnique();
 
-            modelBuilder.Entity<EpisodeSqLite>()
-                .HasIndex(b => new { b.SeasonID, b.EpisodeNumber })
+            modelBuilder.Entity<SeasonSql>()
+                .HasOne(c => c.Show)
+                .WithMany(p => p.Seasons)
+                .HasForeignKey(c => c.ShowID);
+
+
+            modelBuilder.Entity<EpisodeSql>()
+                .HasKey(e => e.Id);
+            modelBuilder.Entity<EpisodeSql>()
+                .Property(e => e.Id).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<EpisodeSql>()
+                .Ignore(e => e.Providers)
+                .Property(e => e.Status).IsRequired();
+
+            modelBuilder.Entity<EpisodeSql>()
+                .HasIndex(e => new { e.SeasonID, e.EpisodeNumber })
                 .IsUnique();
 
-
-            modelBuilder.Entity<EpisodeSqLite>()
-            .HasOne(p => p.Season)
-            .WithMany(b => b.Episodes)
-            .HasForeignKey(p => p.SeasonID);
-
-            modelBuilder.Entity<SeasonSqLite>()
-                .HasOne(p => p.Show)
-                .WithMany(b => b.Seasons)
-                .HasForeignKey(p => p.ShowID);
-
+            modelBuilder.Entity<EpisodeSql>()
+                .HasOne(e => e.Season)
+                .WithMany(s => s.Episodes)
+                .HasForeignKey(e => e.SeasonID);
         }
 
         public static readonly LoggerFactory MyLoggerFactory
