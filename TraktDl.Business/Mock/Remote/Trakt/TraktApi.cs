@@ -25,7 +25,7 @@ namespace TraktDl.Business.Mock.Remote.Trakt
             {
                 Id = 99718,
                 Name = "Westworld",
-                Providers = new Dictionary<string, string> { { "Imdb", "tt0475784" }, { "Tmdb", "63247" } },
+                Providers = new Dictionary<ProviderSql, string> { { ProviderSql.Imdb, "tt0475784" }, { ProviderSql.Tmdb, "63247" } },
             };
 
             var season = new SeasonSql()

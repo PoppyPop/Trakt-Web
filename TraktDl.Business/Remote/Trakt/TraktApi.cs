@@ -135,9 +135,8 @@ namespace TraktDl.Business.Remote.Trakt
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenShowRes)
             {
                 var localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
-                // TODO update providers
 
-                localShow.Blacklisted = true;
+                localShow.Update(traktUserHiddenItem);
 
                 // Store hidden show
                 Database.AddOrUpdateShows(new List<ShowSql> { localShow });
@@ -156,7 +155,7 @@ namespace TraktDl.Business.Remote.Trakt
 
                 var localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
 
-                localSeason.Blacklisted = true;
+                localSeason.Update(traktUserHiddenItem);
 
                 // Store hidden show
                 Database.AddOrUpdateShows(new List<ShowSql> { localShow });
@@ -238,11 +237,8 @@ namespace TraktDl.Business.Remote.Trakt
                     SerieName = traktWatchedShow.Title,
                     Watched = watchedEpisodes >= traktWatchedShow.AiredEpisodes,
                     Status = traktWatchedShow.Status,
-                    Providers = new Dictionary<string, string>
-                    {
-                        {"Imdb", traktWatchedShow.Ids.Imdb},
-                        {"Tmdb", traktWatchedShow.Ids.Tmdb.ToString()}
-                    }
+                    Imdb = traktWatchedShow.Ids.Imdb,
+                    Tmdb = traktWatchedShow.Ids.Tmdb,
                 };
 
                 foreach (ITraktWatchedShowSeason season in traktWatchedShow.WatchedSeasons)
@@ -274,11 +270,8 @@ namespace TraktDl.Business.Remote.Trakt
                         Year = traktCollectionShow.Year,
                         SerieName = traktCollectionShow.Title,
                         Status = traktCollectionShow.Status,
-                        Providers = new Dictionary<string, string>
-                        {
-                            {"Imdb", traktCollectionShow.Ids.Imdb},
-                            {"Tmdb", traktCollectionShow.Ids.Tmdb.ToString()}
-                        }
+                        Imdb = traktCollectionShow.Ids.Imdb,
+                        Tmdb = traktCollectionShow.Ids.Tmdb,
                     };
 
                     shows.Add(show);
@@ -321,6 +314,7 @@ namespace TraktDl.Business.Remote.Trakt
             foreach (TraktShow traktShow in shows)
             {
                 var localShow = GetShow(traktShow.Id);
+                localShow.Update(traktShow);
                 updateShows.Add(localShow);
                 tasks.Add(HandleProgress(traktShow, localShow));
             }

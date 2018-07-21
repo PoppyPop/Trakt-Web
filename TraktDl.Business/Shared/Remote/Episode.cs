@@ -14,25 +14,18 @@ namespace TraktDl.Business.Shared.Remote
 
         public EpisodeStatus Status { get; set; }
 
-        public Dictionary<string, string> Providers { get; set; }
+        public Dictionary<Provider, string> Providers { get; set; }
 
         public string PosterUrl { get; set; }
 
         public Episode()
         {
-            Providers = new Dictionary<string, string>();
+            Providers = new Dictionary<Provider, string>();
         }
 
         public Episode(Guid id) : this()
         {
             Id = id;
         }
-    }
-
-    public enum EpisodeStatus
-    {
-        Unknown,
-        Collected,
-        Missing
     }
 }

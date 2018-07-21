@@ -19,13 +19,13 @@ namespace TraktDl.Business.Remote.Trakt
 
         public TraktShowStatus Status { get; set; }
 
-        public Dictionary<string, string> Providers { get; set; }
+        public uint? Tmdb { get; set; }
+        public string Imdb { get; set; }
 
         public List<TraktSeason> Seasons { get; set; }
 
         public TraktShow()
         {
-            Providers = new Dictionary<string, string>();
             Seasons = new List<TraktSeason>();
         }
     }
