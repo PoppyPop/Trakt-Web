@@ -16,7 +16,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public virtual int EpisodeNumber { get; set; }
 
-        public virtual EpisodeStatusSqLite Status { get; set; }
+        public virtual EpisodeStatusSql Status { get; set; }
 
         public virtual string Name { get; set; }
 
@@ -49,7 +49,7 @@ namespace TraktDl.Business.Database.SqLite
         {
             EpisodeNumber = episode.EpisodeNumber;
             Providers = episode.Providers;
-            Status = (EpisodeStatusSqLite)Enum.Parse(typeof(EpisodeStatusSqLite),
+            Status = (EpisodeStatusSql)Enum.Parse(typeof(EpisodeStatusSql),
                 Enum.GetName(typeof(EpisodeStatus), episode.Status));
             Name = episode.Name;
             PosterUrl = episode.PosterUrl;
@@ -63,14 +63,14 @@ namespace TraktDl.Business.Database.SqLite
                 Providers = Providers,
                 PosterUrl = PosterUrl,
                 Status = (EpisodeStatus)Enum.Parse(typeof(EpisodeStatus),
-                    Enum.GetName(typeof(EpisodeStatusSqLite), Status))
+                    Enum.GetName(typeof(EpisodeStatusSql), Status))
             };
 
             return episode;
         }
     }
 
-    public enum EpisodeStatusSqLite
+    public enum EpisodeStatusSql
     {
         Unknown,
         Collected,

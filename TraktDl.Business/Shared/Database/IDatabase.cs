@@ -6,15 +6,17 @@ namespace TraktDl.Business.Shared.Database
 {
     public interface IDatabase
     {
-        List<ApiKey> ApiKeys { get; }
+        void AddApiKey(ApiKeySql apiKey);
 
-        List<Show> Shows { get; }
-
-        void AddApiKey(ApiKey apiKey);
+        ApiKeySql GetApiKey(string name);
 
         void AddOrUpdateShows(List<ShowSql> shows);
 
-        List<Show> GetMissingEpisode();
+        List<ShowSql> GetShows();
+
+        ShowSql GetShow(uint id);
+
+        List<ShowSql> GetMissingEpisode();
 
         void ClearMissingEpisodes();
 

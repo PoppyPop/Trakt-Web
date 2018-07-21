@@ -34,9 +34,9 @@ namespace TraktDl.Business.Mock.Remote.Trakt
             };
             season.Episodes = new List<EpisodeSql>
             {
-                new EpisodeSql() {EpisodeNumber = 3, Status = EpisodeStatusSqLite.Missing},
-                new EpisodeSql() {EpisodeNumber = 4, Status = EpisodeStatusSqLite.Missing},
-                new EpisodeSql() {EpisodeNumber = 5, Status = EpisodeStatusSqLite.Collected}
+                new EpisodeSql() {EpisodeNumber = 3, Status = EpisodeStatusSql.Missing},
+                new EpisodeSql() {EpisodeNumber = 4, Status = EpisodeStatusSql.Missing},
+                new EpisodeSql() {EpisodeNumber = 5, Status = EpisodeStatusSql.Collected}
             };
 
             show.Seasons = new List<SeasonSql> { season };

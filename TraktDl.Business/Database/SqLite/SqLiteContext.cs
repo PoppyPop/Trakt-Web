@@ -2,12 +2,13 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
+using TraktDl.Business.Shared.Database;
 
 namespace TraktDl.Business.Database.SqLite
 {
     public class SqLiteContext : DbContext
     {
-        public DbSet<ApiKeySqLite> ApiKeys { get; set; }
+        public DbSet<ApiKeySql> ApiKeys { get; set; }
 
         public DbSet<ShowSql> Shows { get; set; }
 
@@ -62,6 +63,15 @@ namespace TraktDl.Business.Database.SqLite
                 .HasOne(e => e.Season)
                 .WithMany(s => s.Episodes)
                 .HasForeignKey(e => e.SeasonID);
+
+
+            modelBuilder.Entity<ApiKeySql>()
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<ApiKeySql>()
+                .Property(s => s.Id).ValueGeneratedNever();
+            modelBuilder.Entity<ApiKeySql>()
+                .Property(s => s.ApiData).IsRequired();
+
         }
 
         public static readonly LoggerFactory MyLoggerFactory

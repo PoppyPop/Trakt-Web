@@ -27,26 +27,27 @@ namespace TraktDl.Business.Database.SqLite
         public SeasonSql(ShowSql show) : this()
         {
             Show = show;
+            Episodes = new List<EpisodeSql>();
         }
 
-        public void Update(Shared.Remote.Season season)
-        {
-            SeasonNumber = season.SeasonNumber;
-            Blacklisted = season.Blacklisted;
+        //public void Update(Shared.Remote.Season season)
+        //{
+        //    SeasonNumber = season.SeasonNumber;
+        //    Blacklisted = season.Blacklisted;
 
-            foreach (Episode episode in season.Episodes)
-            {
-                var bddEpisode = Episodes.SingleOrDefault(s => s.EpisodeNumber == episode.EpisodeNumber);
-                if (bddEpisode == null)
-                {
-                    bddEpisode = new EpisodeSql(this);
-                    Episodes.Add(bddEpisode);
-                }
+        //    foreach (Episode episode in season.Episodes)
+        //    {
+        //        var bddEpisode = Episodes.SingleOrDefault(s => s.EpisodeNumber == episode.EpisodeNumber);
+        //        if (bddEpisode == null)
+        //        {
+        //            bddEpisode = new EpisodeSql(this);
+        //            Episodes.Add(bddEpisode);
+        //        }
 
-                bddEpisode.Update(episode);
-            }
+        //        bddEpisode.Update(episode);
+        //    }
 
-        }
+        //}
 
         public Shared.Remote.Season Convert()
         {

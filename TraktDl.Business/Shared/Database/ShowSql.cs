@@ -45,29 +45,30 @@ namespace TraktDl.Business.Database.SqLite
         public ShowSql(Shared.Remote.Show show) : this()
         {
             Id = show.Id;
-            Update(show);
+            Seasons = new List<SeasonSql>();
+            //Update(show);
         }
 
-        public void Update(Shared.Remote.Show show)
-        {
-            Name = show.SerieName;
-            Providers = show.Providers;
-            Blacklisted = show.Blacklisted;
-            Year = show.Year;
-            PosterUrl = show.PosterUrl;
+        //public void Update(Shared.Remote.Show show)
+        //{
+        //    Name = show.SerieName;
+        //    Providers = show.Providers;
+        //    Blacklisted = show.Blacklisted;
+        //    Year = show.Year;
+        //    PosterUrl = show.PosterUrl;
 
-            foreach (Season showSeason in show.Seasons)
-            {
-                var bddSeason = Seasons.SingleOrDefault(s => s.SeasonNumber == showSeason.SeasonNumber);
-                if (bddSeason == null)
-                {
-                    bddSeason = new SeasonSql(this);
-                    Seasons.Add(bddSeason);
-                }
+        //    foreach (Season showSeason in show.Seasons)
+        //    {
+        //        var bddSeason = Seasons.SingleOrDefault(s => s.SeasonNumber == showSeason.SeasonNumber);
+        //        if (bddSeason == null)
+        //        {
+        //            bddSeason = new SeasonSql(this);
+        //            Seasons.Add(bddSeason);
+        //        }
 
-                bddSeason.Update(showSeason);
-            }
-        }
+        //        bddSeason.Update(showSeason);
+        //    }
+        //}
 
         public Shared.Remote.Show Convert()
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
@@ -24,7 +25,7 @@ namespace TraktDl.Web.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Show>> Get()
         {
-            return _database.GetMissingEpisode();
+            return _database.GetMissingEpisode().Select(c => c.Convert()).ToList();
         }
 
         [HttpPost]

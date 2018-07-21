@@ -20,19 +20,13 @@ namespace TraktDl.Business.Database.SqLite
             context.Database.Migrate();
         }
 
-        public List<ApiKey> ApiKeys => context.ApiKeys.Select(b => b.Convert()).ToList();
-
-        public List<Show> Shows => context.Shows.Select(b => b.Convert()).ToList();
-
-        public IEnumerable<ShowSql> ShowsSql => context.Shows;
-
-        public void AddApiKey(ApiKey apiKey)
+        public void AddApiKey(ApiKeySql apiKey)
         {
             var exist = context.ApiKeys.SingleOrDefault(b => b.Id == apiKey.Id);
 
             if (exist == null)
             {
-                context.ApiKeys.Add(new ApiKeySqLite(apiKey));
+                context.ApiKeys.Add(apiKey);
             }
             else
             {
@@ -40,6 +34,11 @@ namespace TraktDl.Business.Database.SqLite
             }
 
             context.SaveChanges();
+        }
+
+        public ApiKeySql GetApiKey(string name)
+        {
+            return context.ApiKeys.SingleOrDefault(k => k.Id == name);
         }
 
         public void AddOrUpdateShows(List<ShowSql> shows)
@@ -57,24 +56,31 @@ namespace TraktDl.Business.Database.SqLite
             context.SaveChanges();
         }
 
-        public List<Show> GetMissingEpisode()
+        public List<ShowSql> GetShows()
         {
-            var res = context.Shows
+            return context.Shows.ToList();
+        }
+
+        public ShowSql GetShow(uint id)
+        {
+            return context.Shows.SingleOrDefault(s => s.Id == id);
+        }
+
+        public List<ShowSql> GetMissingEpisode()
+        {
+            return context.Shows
                 .Join(context.Seasons, show => show.Id, season => season.ShowID, (show, season) => new { show, season })
-                .Where(s => s.season.Episodes.Any(ep => ep.Status == EpisodeStatusSqLite.Missing))
+                .Where(s => s.season.Episodes.Any(ep => ep.Status == EpisodeStatusSql.Missing))
                 .Select(s => s.show).ToList();
-
-
-            return res.Select(s => s.Convert()).ToList();
         }
 
 
         public void ClearMissingEpisodes()
         {
-            var episodes = context.Episodes.Where(e => e.Status == EpisodeStatusSqLite.Missing);
+            var episodes = context.Episodes.Where(e => e.Status == EpisodeStatusSql.Missing);
             foreach (var episodeSqLite in episodes)
             {
-                episodeSqLite.Status = EpisodeStatusSqLite.Unknown;
+                episodeSqLite.Status = EpisodeStatusSql.Unknown;
             }
 
             context.SaveChanges();

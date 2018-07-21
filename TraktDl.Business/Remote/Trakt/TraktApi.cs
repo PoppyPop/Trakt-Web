@@ -26,7 +26,7 @@ namespace TraktDl.Business.Remote.Trakt
 
         private ITraktApiClient TraktApiClient { get; }
 
-        private SqLiteDatabase Database { get; }
+        private IDatabase Database { get; }
 
         private TraktClient Client { get; set; }
 
@@ -35,7 +35,7 @@ namespace TraktDl.Business.Remote.Trakt
         public TraktApi(ITraktApiClient client, IDatabase database)
         {
             TraktApiClient = client;
-            Database = database as SqLiteDatabase;
+            Database = database;
             SetupClient();
         }
 
@@ -99,13 +99,13 @@ namespace TraktDl.Business.Remote.Trakt
 
         private void SaveAuthToken(TraktToken token)
         {
-            Database.AddApiKey(new ApiKey { Id = ApiKeyName, ApiData = JsonConvert.SerializeObject(token) });
+            Database.AddApiKey(new ApiKeySql { Id = ApiKeyName, ApiData = JsonConvert.SerializeObject(token) });
         }
 
         private TraktToken GetAuthToken()
         {
-            var key = Database.ApiKeys.SingleOrDefault(k => k.Id == ApiKeyName);
-
+            var key = Database.GetApiKey(ApiKeyName);
+                
             if (key != null)
             {
                 return JsonConvert.DeserializeObject<TraktToken>(key.ApiData);
@@ -165,7 +165,7 @@ namespace TraktDl.Business.Remote.Trakt
 
         private ShowSql GetShow(uint id)
         {
-            var localShow = Database.ShowsSql.SingleOrDefault(s => s.Id == id);
+            var localShow = Database.GetShow(id);
 
             if (localShow == null)
             {
@@ -203,7 +203,7 @@ namespace TraktDl.Business.Remote.Trakt
                 localEpisode = new EpisodeSql(season)
                 {
                     EpisodeNumber = episodeNumber,
-                    Status = EpisodeStatusSqLite.Unknown,
+                    Status = EpisodeStatusSql.Unknown,
                 };
                 season.Episodes.Add(localEpisode);
             }
@@ -311,7 +311,7 @@ namespace TraktDl.Business.Remote.Trakt
             shows.RemoveAll(s => s.Watched);
 
             // PrepareDB 
-           var bddShows = Database.ShowsSql;
+           var bddShows = Database.GetShows();
             List<ShowSql> updateShows = new List<ShowSql>();
 
             // Remove Show blacklist
@@ -386,7 +386,7 @@ namespace TraktDl.Business.Remote.Trakt
                     foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
                     {
                         var ep = GetEpisode(season, missingEpisode.Episode);
-                        ep.Status = EpisodeStatusSqLite.Missing;
+                        ep.Status = EpisodeStatusSql.Missing;
                     }
                 }
 

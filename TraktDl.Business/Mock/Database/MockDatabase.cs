@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
@@ -7,19 +8,24 @@ namespace TraktDl.Business.Mock.Database
 {
     public class MockDatabase : IDatabase
     {
-        public List<ApiKey> ApiKeys { get; set; }
+        private List<ApiKeySql> ApiKeys { get; set; }
 
-        public List<Show> Shows { get; set; }
+        private List<ShowSql> Shows { get; set; }
 
         public MockDatabase()
         {
-            ApiKeys = new List<ApiKey>();
-            Shows = new List<Show>();
+            ApiKeys = new List<ApiKeySql>();
+            Shows = new List<ShowSql>();
         }
 
-        public void AddApiKey(ApiKey apiKey)
+        public void AddApiKey(ApiKeySql apiKey)
         {
             ApiKeys.Add(apiKey);
+        }
+
+        public ApiKeySql GetApiKey(string name)
+        {
+            return ApiKeys.SingleOrDefault(a => a.Id == name);
         }
 
         public void AddOrUpdateShows(List<ShowSql> shows)
@@ -27,9 +33,19 @@ namespace TraktDl.Business.Mock.Database
             //Shows.AddRange(shows);
         }
 
-        public List<Show> GetMissingEpisode()
+        public List<ShowSql> GetShows()
         {
-            var res = new List<Show>();
+            return Shows;
+        }
+
+        public ShowSql GetShow(uint id)
+        {
+            return Shows.SingleOrDefault(s => s.Id == id);
+        }
+
+        public List<ShowSql> GetMissingEpisode()
+        {
+            var res = new List<ShowSql>();
 
             foreach (var show in Shows)
             {
@@ -37,7 +53,7 @@ namespace TraktDl.Business.Mock.Database
                 {
                     foreach (var episode in season.Episodes)
                     {
-                        if (episode.Status == EpisodeStatus.Missing)
+                        if (episode.Status == EpisodeStatusSql.Missing)
                             res.Add(show);
                     }
                 }
