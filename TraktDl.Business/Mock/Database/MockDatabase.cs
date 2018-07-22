@@ -94,6 +94,11 @@ namespace TraktDl.Business.Mock.Database
 
         }
 
+        public void ClearUnknownEpisodes()
+        {
+            
+        }
+
         public bool ResetBlacklist()
         {
             return true;

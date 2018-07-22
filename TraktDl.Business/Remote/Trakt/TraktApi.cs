@@ -105,7 +105,7 @@ namespace TraktDl.Business.Remote.Trakt
         private TraktToken GetAuthToken()
         {
             var key = Database.GetApiKey(ApiKeyName);
-                
+
             if (key != null)
             {
                 return JsonConvert.DeserializeObject<TraktToken>(key.ApiData);
@@ -117,15 +117,16 @@ namespace TraktDl.Business.Remote.Trakt
         private void RefreshHiddenItem()
         {
             var showRefresh = RefreshShowHiddenItem();
-            showRefresh.Wait();
-
             var seasonRefresh = RefreshSeasonHiddenItem();
 
             Task.WaitAll(showRefresh, seasonRefresh);
+
+            Database.AddOrUpdateShows(showRefresh.Result.Concat(seasonRefresh.Result).ToList());
         }
 
-        private async Task RefreshShowHiddenItem()
+        private async Task<List<ShowSql>> RefreshShowHiddenItem()
         {
+            List<ShowSql> res = new List<ShowSql>();
             var hiddenShow = await Client.Users
                 .GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Show)
                 .ConfigureAwait(false);
@@ -138,13 +139,15 @@ namespace TraktDl.Business.Remote.Trakt
 
                 localShow.Update(traktUserHiddenItem);
 
-                // Store hidden show
-                Database.AddOrUpdateShows(new List<ShowSql> { localShow });
+                res.Add(localShow);
             }
+
+            return res;
         }
 
-        private async Task RefreshSeasonHiddenItem()
+        private async Task<List<ShowSql>> RefreshSeasonHiddenItem()
         {
+            List<ShowSql> res = new List<ShowSql>();
             var hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
 
             TraktPagedResponse<ITraktUserHiddenItem> hiddenSeasonRes = hiddenSeason;
@@ -157,9 +160,10 @@ namespace TraktDl.Business.Remote.Trakt
 
                 localSeason.Update(traktUserHiddenItem);
 
-                // Store hidden show
-                Database.AddOrUpdateShows(new List<ShowSql> { localShow });
+                res.Add(localShow);
             }
+
+            return res;
         }
 
         private ShowSql GetShow(uint id)
@@ -304,7 +308,7 @@ namespace TraktDl.Business.Remote.Trakt
             shows.RemoveAll(s => s.Watched);
 
             // PrepareDB 
-           var bddShows = Database.GetShows();
+            var bddShows = Database.GetShows();
             List<ShowSql> updateShows = new List<ShowSql>();
 
             // Remove Show blacklist
@@ -322,6 +326,8 @@ namespace TraktDl.Business.Remote.Trakt
             Task.WaitAll(tasks.ToArray());
 
             Database.AddOrUpdateShows(updateShows);
+
+            Database.ClearUnknownEpisodes();
 
             shows.RemoveAll(s => !s.Seasons.Any());
 
@@ -376,11 +382,14 @@ namespace TraktDl.Business.Remote.Trakt
                         season.Blacklisted = true;
                     }
 
-                    // Save missing episode
-                    foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
+                    if (!season.Blacklisted)
                     {
-                        var ep = GetEpisode(season, missingEpisode.Episode);
-                        ep.Status = EpisodeStatusSql.Missing;
+                        // Save missing episode
+                        foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
+                        {
+                            var ep = GetEpisode(season, missingEpisode.Episode);
+                            ep.Status = EpisodeStatusSql.Missing;
+                        }
                     }
                 }
 

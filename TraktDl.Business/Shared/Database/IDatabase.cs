@@ -22,6 +22,8 @@ namespace TraktDl.Business.Shared.Database
 
         void ClearMissingEpisodes();
 
+        void ClearUnknownEpisodes();
+
         bool ResetBlacklist();
 
         bool ResetImages();

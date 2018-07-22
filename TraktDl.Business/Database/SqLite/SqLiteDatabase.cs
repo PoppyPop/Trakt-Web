@@ -61,9 +61,13 @@ namespace TraktDl.Business.Database.SqLite
             return context.Shows.ToList();
         }
 
+        private readonly object _getShowLock = new object();
         public ShowSql GetShow(uint id)
         {
-            return context.Shows.SingleOrDefault(s => s.Id == id);
+            lock (_getShowLock)
+            {
+                return context.Shows.SingleOrDefault(s => s.Id == id);
+            }
         }
 
         public List<ShowSql> GetMissingEpisode()
@@ -89,6 +93,17 @@ namespace TraktDl.Business.Database.SqLite
             foreach (var episodeSqLite in episodes)
             {
                 episodeSqLite.Status = EpisodeStatusSql.Unknown;
+            }
+
+            context.SaveChanges();
+        }
+
+        public void ClearUnknownEpisodes()
+        {
+            var episodes = context.Episodes.Where(e => e.Status == EpisodeStatusSql.Unknown);
+            foreach (var episodeSqLite in episodes)
+            {
+                episodeSqLite.Status = EpisodeStatusSql.Collected;
             }
 
             context.SaveChanges();
