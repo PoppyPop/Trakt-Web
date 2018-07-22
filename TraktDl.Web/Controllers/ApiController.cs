@@ -32,10 +32,17 @@ namespace TraktDl.Web.Controllers
         public ActionResult<bool> Refresh()
         {
             var resutRefresh = _trackingApi.RefreshMissingEpisodes();
-            if (resutRefresh)
-                return _imageApi.RefreshImages();
+            //if (resutRefresh)
+            //    resutRefresh = _imageApi.RefreshImages();
 
-            return false;
+            return resutRefresh;
+        }
+
+        [HttpPost]
+        [Route("Images")]
+        public ActionResult<bool> Images()
+        {
+            return _imageApi.RefreshImages();
         }
 
         [HttpPost]
@@ -43,6 +50,13 @@ namespace TraktDl.Web.Controllers
         public ActionResult<bool> ResetBlacklist()
         {
             return _database.ResetBlacklist();
+        }
+
+        [HttpPost]
+        [Route("ResetImages")]
+        public ActionResult<bool> ResetImages()
+        {
+            return _database.ResetImages();
         }
 
     }

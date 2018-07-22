@@ -43,7 +43,7 @@ namespace TraktDl.Web
             services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Remote.Trakt.TraktApi));
             //services.AddTransient(typeof(ITrackingApi), typeof(TraktDl.Business.Mock.Remote.Trakt.TraktApi));
 
-            services.AddTransient(typeof(IImageApi), typeof(TraktDl.Business.Mock.Remote.Tmdb.Tmdb));
+            services.AddTransient(typeof(IImageApi), typeof(TraktDl.Business.Remote.Tmdb.Tmdb));
 
         }
 

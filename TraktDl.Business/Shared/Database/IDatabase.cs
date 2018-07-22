@@ -18,8 +18,12 @@ namespace TraktDl.Business.Shared.Database
 
         List<ShowSql> GetMissingEpisode();
 
+        List<ShowSql> GetMissingImages();
+
         void ClearMissingEpisodes();
 
         bool ResetBlacklist();
+
+        bool ResetImages();
     }
 }

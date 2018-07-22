@@ -62,12 +62,44 @@ namespace TraktDl.Business.Mock.Database
             return res;
         }
 
+        public List<ShowSql> GetMissingImages()
+        {
+            var res = new List<ShowSql>();
+
+            foreach (var show in Shows)
+            {
+                if (string.IsNullOrEmpty(show.PosterUrl))
+                {
+                    res.Add(show);
+                }
+                else
+                {
+                    foreach (var season in show.Seasons)
+                    {
+                        foreach (var episode in season.Episodes)
+                        {
+                            if (string.IsNullOrEmpty(episode.PosterUrl))
+                                res.Add(show);
+                        }
+                    }
+                }
+
+            }
+
+            return res;
+        }
+
         public void ClearMissingEpisodes()
         {
 
         }
 
         public bool ResetBlacklist()
+        {
+            return true;
+        }
+
+        public bool ResetImages()
         {
             return true;
         }

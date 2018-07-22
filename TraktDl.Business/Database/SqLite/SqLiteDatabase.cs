@@ -74,6 +74,14 @@ namespace TraktDl.Business.Database.SqLite
                 .Select(s => s.show).ToList();
         }
 
+        public List<ShowSql> GetMissingImages()
+        {
+            return context.Shows
+                .Join(context.Seasons, show => show.Id, season => season.ShowID, (show, season) => new { show, season })
+                .Where(s => string.IsNullOrEmpty(s.show.PosterUrl) || s.season.Episodes.Any(ep => string.IsNullOrEmpty(ep.PosterUrl)))
+                .Select(s => s.show).ToList();
+        }
+
 
         public void ClearMissingEpisodes()
         {
@@ -98,6 +106,25 @@ namespace TraktDl.Business.Database.SqLite
             foreach (var seasonSqLite in blacklistedSeason)
             {
                 seasonSqLite.Blacklisted = false;
+            }
+
+            context.SaveChanges();
+
+            return true;
+        }
+
+        public bool ResetImages()
+        {
+            var imagesShow = context.Shows.Where(s => !string.IsNullOrEmpty(s.PosterUrl));
+            foreach (var showSqLite in imagesShow)
+            {
+                showSqLite.PosterUrl = null;
+            }
+
+            var imagesEpisodes = context.Episodes.Where(s => !string.IsNullOrEmpty(s.PosterUrl));
+            foreach (var epîsodeSqLite in imagesEpisodes)
+            {
+                epîsodeSqLite.PosterUrl = null;
             }
 
             context.SaveChanges();
