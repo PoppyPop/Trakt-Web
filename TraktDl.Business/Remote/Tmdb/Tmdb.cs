@@ -16,8 +16,6 @@ namespace TraktDl.Business.Remote.Tmdb
         public Tmdb(IDatabase database)
         {
             Database = database;
-
-
         }
 
         public bool RefreshImages()
@@ -29,10 +27,18 @@ namespace TraktDl.Business.Remote.Tmdb
             client.GetConfigAsync().Wait();
 
             List<Task> tasks = new List<Task>();
+            int counter = 0;
+
 
             foreach (var showSql in shows)
             {
+                if (counter % 4 == 0)
+                {
+                    Task.Delay(1000).Wait();
+                }
+
                 tasks.Add(RefreshShow(client, showSql));
+                counter++;
             }
 
             Task.WaitAll(tasks.ToArray());
@@ -44,35 +50,41 @@ namespace TraktDl.Business.Remote.Tmdb
 
         private async Task RefreshShow(TMDbClient client, ShowSql showSql)
         {
-            List<Task> tasks = new List<Task>();
+            int showId;
 
-            // Refresh episodes
-            foreach (var seasonSql in showSql.Seasons)
+            if (showSql.Providers.ContainsKey(ProviderSql.Tmdb) && !string.IsNullOrEmpty(showSql.Providers[ProviderSql.Tmdb]) && Int32.TryParse(showSql.Providers[ProviderSql.Tmdb], out showId))
             {
-                foreach (var episodeSql in seasonSql.Episodes)
+                List<Task> tasks = new List<Task>();
+
+                // Refresh episodes
+                foreach (var seasonSql in showSql.Seasons)
                 {
-                    tasks.Add(RefreshEpisode(client, episodeSql));
+                    foreach (var episodeSql in seasonSql.Episodes)
+                    {
+                        await Task.Delay(1000);
+
+                        tasks.Add(RefreshEpisode(client, episodeSql, showId));
+                    }
                 }
+
+                // Missing show infos
+                if (string.IsNullOrEmpty(showSql.PosterUrl))
+                {
+                    TvShow tvShow = await client.GetTvShowAsync(showId, TvShowMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
+
+                    showSql.Update(client.Config, tvShow);
+                }
+
+                // ensure episode update if finished
+                Task.WaitAll(tasks.ToArray());
             }
-
-
-            // Missing show infos
-            if (string.IsNullOrEmpty(showSql.PosterUrl))
-            {
-                TvShow tvShow = await client.GetTvShowAsync(Convert.ToInt32(showSql.Providers[ProviderSql.Tmdb]), TvShowMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
-
-                showSql.Update(client.Config, tvShow);
-            }
-
-            // ensure episode update if finished
-            Task.WaitAll(tasks.ToArray());
         }
 
-        private async Task RefreshEpisode(TMDbClient client, EpisodeSql episodeSql)
+        private async Task RefreshEpisode(TMDbClient client, EpisodeSql episodeSql, int showId)
         {
             if (string.IsNullOrEmpty(episodeSql.PosterUrl))
             {
-                TvEpisode tvEpisode = await client.GetTvEpisodeAsync(Convert.ToInt32(episodeSql.Season.Show.Providers[ProviderSql.Tmdb]), episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
+                TvEpisode tvEpisode = await client.GetTvEpisodeAsync(showId, episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
 
                 episodeSql.Update(client.Config, tvEpisode);
             }

@@ -168,7 +168,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             if (localShow == null)
             {
-                localShow = new ShowSql
+                localShow = new ShowSql(true)
                 {
                     Id = id,
                 };

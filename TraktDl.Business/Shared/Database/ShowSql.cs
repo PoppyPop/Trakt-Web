@@ -40,8 +40,15 @@ namespace TraktDl.Business.Database.SqLite
 
         public ShowSql()
         {
+            
             Providers = new Dictionary<ProviderSql, string>();
         }
+
+        public ShowSql(bool create) : this()
+        {
+            Seasons = new List<SeasonSql>();
+        }
+
 
         public Shared.Remote.Show Convert()
         {

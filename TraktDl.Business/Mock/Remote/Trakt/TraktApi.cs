@@ -21,7 +21,7 @@ namespace TraktDl.Business.Mock.Remote.Trakt
         {
             List<ShowSql> result = new List<ShowSql>();
 
-            var show = new ShowSql
+            var show = new ShowSql(true)
             {
                 Id = 99718,
                 Name = "Westworld",
@@ -43,13 +43,13 @@ namespace TraktDl.Business.Mock.Remote.Trakt
 
             result.Add(show);
 
-            result.Add(new ShowSql
+            result.Add(new ShowSql(true)
             {
                 Id = 123,
                 Name = "z fake",
             });
 
-            result.Add(new ShowSql
+            result.Add(new ShowSql(true)
             {
                 Id = 456,
                 Name = "9 fake",

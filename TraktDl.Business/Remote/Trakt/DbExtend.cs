@@ -15,8 +15,11 @@ namespace TraktDl.Business.Remote.Trakt
 
             var show = item.Show;
 
-            showBdd.Providers[ProviderSql.Tmdb] = show.Ids.Tmdb.ToString();
-            showBdd.Providers[ProviderSql.Imdb] = show.Ids.Imdb;
+            if (show.Ids.Tmdb.HasValue)
+                showBdd.Providers[ProviderSql.Tmdb] = show.Ids.Tmdb.ToString();
+
+            if (!string.IsNullOrEmpty(show.Ids.Imdb))
+                showBdd.Providers[ProviderSql.Imdb] = show.Ids.Imdb;
         }
 
         public static void Update(this ShowSql showBdd, TraktShow item)
@@ -24,8 +27,11 @@ namespace TraktDl.Business.Remote.Trakt
             showBdd.Name = item.SerieName;
             showBdd.Year = item.Year;
 
-            showBdd.Providers[ProviderSql.Tmdb] = item.Tmdb.ToString();
-            showBdd.Providers[ProviderSql.Imdb] = item.Imdb;
+            if (item.Tmdb.HasValue)
+                showBdd.Providers[ProviderSql.Tmdb] = item.Tmdb.ToString();
+
+            if (!string.IsNullOrEmpty(item.Imdb))
+                showBdd.Providers[ProviderSql.Imdb] = item.Imdb;
         }
 
         public static void Update(this SeasonSql seasonBdd, ITraktUserHiddenItem item)
