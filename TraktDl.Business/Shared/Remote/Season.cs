@@ -12,8 +12,6 @@ namespace TraktDl.Business.Shared.Remote
 
         public bool Blacklisted { get; set; }
 
-        public List<Episode> MissingEpisodes => Episodes.Where(e => e.Status == EpisodeStatus.Missing).ToList();
-
         public List<Episode> Episodes { get; set; }
 
         public Season()
