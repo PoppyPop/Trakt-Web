@@ -5,6 +5,18 @@
 
 const uri = 'api/show';
 
+Handlebars.registerHelper('progress-status', function (percent) {
+    if (percent >= 0 && percent < 25) {
+        return "danger";
+    } else if (percent >= 25 && percent < 50) {
+        return "warning";
+    } else if (percent >= 50 && percent < 75) {
+        return "info";
+    } else {
+        return "success";
+    }
+});
+
 $(document).ready(function () {
     getData();
 });
@@ -17,13 +29,11 @@ function getData() {
             $('#todos').empty();
             //getCount(data.length);
             $.each(data, function (key, item) {
-                const checked = item.blacklisted ? 'checked' : '';
 
-                $('<tr><td><input disabled="true" type="checkbox" ' + checked + '></td>' +
-                    '<td>' + item.serieName + '</td>' +
-                    '<td><button onclick="editItem(' + item.id + ')">Edit</button></td>' +
-                    '<td><button onclick="deleteItem(' + item.id + ')">Delete</button></td>' +
-                    '</tr>').appendTo($('#todos'));
+                var source = $('#template').html();
+                var template = Handlebars.compile(source);
+
+                $('#progress-wrapper').append(template(item));
             });
 
             todos = data;
