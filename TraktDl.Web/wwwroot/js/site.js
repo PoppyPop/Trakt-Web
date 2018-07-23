@@ -21,15 +21,15 @@ Handlebars.registerHelper('progress-status', function (percent) {
 
 Handlebars.registerHelper('truncate', function (text) {
     if (text && text.length > 41) {
-        return text.substring(0, 38)+"...";
-    } 
+        return text.substring(0, 38) + "...";
+    }
     return text;
 });
 
 Handlebars.registerHelper('episode-status', function (status) {
-    if (status == 0) {
+    if (status === 0) {
         return "other";
-    } else if (status == 1) {
+    } else if (status === 1) {
         return "check";
     } else {
         return "delete";
@@ -40,22 +40,90 @@ $(document).ready(function () {
     getData();
 });
 
+function resetBlacklist() {
+    $('#blacklistReset').addClass("fa-spin");
+
+    $.ajax({
+        type: 'POST',
+        url: uri + '/ResetBlacklist',
+        success: function (data) {
+            $('#blacklistReset').removeClass("fa-spin");
+            getData();
+        }
+    });
+}
+
+function resetImages() {
+    $('#imagesReset').addClass("fa-spin");
+
+    $.ajax({
+        type: 'POST',
+        url: uri + '/ResetImages',
+        success: function (data) {
+            $('#imagesReset').removeClass("fa-spin");
+            getData();
+        }
+    });
+}
+
+function updateTraking() {
+    $('#updateButton').addClass("fa-spin");
+
+    $.ajax({
+        type: 'POST',
+        url: uri,
+        success: function (data) {
+            $('#updateButton').removeClass("fa-spin");
+            getData();
+        }
+    });
+}
+
+function updateImages() {
+    $('#imagesButton').addClass("fa-spin");
+
+    $.ajax({
+        type: 'POST',
+        url: uri + '/Images',
+        success: function (data) {
+            $('#imagesButton').removeClass("fa-spin");
+            getData();
+        }
+    });
+}
+
+function updateImage(show) {
+
+    $.ajax({
+        type: 'POST',
+        url: uri + '/' + show + '/Images',
+        success: function (data) {
+
+            $('#show-poster-' + show).attr("src", data.posterUrl);
+            if (data.nextEpisodeToCollect) {
+                $('#show-collect-poster-' + show).attr("src", data.nextEpisodeToCollect.posterUrl);
+            }
+        }
+    });
+}
+
 function getData() {
+    $('#progress-wrapper').empty();
+    $('#refreshButton').addClass("fa-spin");
+
     $.ajax({
         type: 'GET',
         url: uri + '/missings',
         success: function (data) {
-            $('#todos').empty();
-            //getCount(data.length);
             $.each(data, function (key, item) {
+                $('#refreshButton').removeClass("fa-spin");
+                $('#progress-wrapper').append(Handlebars.templates.row(item));
 
-                var source = $('#template').html();
-                var template = Handlebars.compile(source);
+                if (!item.posterUrl || (item.nextEpisodeToCollect && !item.nextEpisodeToCollect.posterUrl)) {
+                    updateImage(item.id);
+                }
 
-                $('#progress-wrapper').append(template(item));
             });
-
-            todos = data;
         }
     });
 }

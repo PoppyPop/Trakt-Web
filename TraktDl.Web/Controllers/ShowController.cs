@@ -52,11 +52,7 @@ namespace TraktDl.Web.Controllers
         [HttpPost("{id}/Images")]
         public Show Images(uint id)
         {
-            var showBdd = _database.GetShow(id);
-
-            //_imageApi.RefreshImages(showBdd);
-
-            return showBdd?.Convert();
+            return _imageApi.RefreshImage(id);
         }
 
         // POST: api/Show

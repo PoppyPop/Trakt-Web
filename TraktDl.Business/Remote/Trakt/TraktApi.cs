@@ -36,7 +36,6 @@ namespace TraktDl.Business.Remote.Trakt
         {
             TraktApiClient = client;
             Database = database;
-            SetupClient();
         }
 
         private void SetupClient()
@@ -50,10 +49,9 @@ namespace TraktDl.Business.Remote.Trakt
 
             Client = client;
 
-            var token = GetAuthToken();
-
-            if (token != null)
+            if (IsUsable)
             {
+                var token = GetAuthToken();
                 var authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
                 client.Authorization = authorization;
 
@@ -61,7 +59,7 @@ namespace TraktDl.Business.Remote.Trakt
             }
             else
             {
-                TryToDeviceAuthenticate().Wait();
+                throw new Exception("Not authenticated");
             }
         }
 
@@ -112,6 +110,38 @@ namespace TraktDl.Business.Remote.Trakt
             }
 
             return null;
+        }
+
+        public bool IsUsable => GetAuthToken() != null;
+
+        public async Task<DeviceToken> GetDeviceToken()
+        {
+            TraktResponse<ITraktDevice> device = await Client.Authentication.GenerateDeviceAsync().ConfigureAwait(false);
+
+            if (device.HasValue && device.Value.IsValid)
+            {
+                Console.WriteLine("You have to authenticate this application.");
+                Console.WriteLine($"Please visit the following webpage: {device.Value.VerificationUrl}");
+                Console.WriteLine($"Sign in or sign up on that webpage and enter the following code: {device.Value.UserCode}");
+
+                return new DeviceToken {Token = device.Value.UserCode, Url = device.Value.VerificationUrl };
+            }
+
+            return null;
+        }
+
+        public async Task<bool> CheckAuthent(string deviceToken)
+        {
+            TraktResponse<ITraktAuthorization> authorization = await Client.Authentication.GetAuthorizationAsync(deviceToken);
+
+            if (authorization.HasValue && authorization.Value.IsValid)
+            {
+                SaveAuthToken(new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
+
+                return true;
+            }
+
+            return false;
         }
 
         private void RefreshHiddenItem()
@@ -240,6 +270,8 @@ namespace TraktDl.Business.Remote.Trakt
 
         public bool RefreshMissingEpisodes()
         {
+            SetupClient();
+
             RefreshHiddenItem();
 
             // Set all missing to unknown

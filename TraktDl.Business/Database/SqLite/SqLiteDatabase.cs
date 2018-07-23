@@ -126,13 +126,13 @@ namespace TraktDl.Business.Database.SqLite
 
         public bool ResetImages()
         {
-            var imagesShow = context.Shows.Where(s => !string.IsNullOrEmpty(s.PosterUrl));
+            var imagesShow = context.Shows.Where(s => !s.Blacklisted && !string.IsNullOrEmpty(s.PosterUrl));
             foreach (var showSqLite in imagesShow)
             {
                 showSqLite.PosterUrl = null;
             }
 
-            var imagesEpisodes = context.Episodes.Where(s => !string.IsNullOrEmpty(s.PosterUrl));
+            var imagesEpisodes = context.Episodes.Where(s => !s.Season.Blacklisted && !s.Season.Show.Blacklisted && !string.IsNullOrEmpty(s.PosterUrl));
             foreach (var epîsodeSqLite in imagesEpisodes)
             {
                 epîsodeSqLite.PosterUrl = null;

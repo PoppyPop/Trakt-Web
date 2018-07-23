@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
@@ -11,6 +12,8 @@ namespace TraktDl.Business.Mock.Remote.Trakt
         public string GetMode => "Mock";
 
         private IDatabase Database { get; }
+
+        public bool IsUsable => true;
 
         public TraktApi(IDatabase database)
         {
@@ -59,5 +62,12 @@ namespace TraktDl.Business.Mock.Remote.Trakt
 
             return true;
         }
+
+#pragma warning disable 1998
+        public async Task<DeviceToken> GetDeviceToken() => new DeviceToken();
+
+        public async Task<bool> CheckAuthent(string deviceToken) => true;
+
+#pragma warning restore 1998
     }
 }

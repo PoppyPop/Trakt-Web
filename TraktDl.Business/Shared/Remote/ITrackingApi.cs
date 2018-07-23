@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TraktDl.Business.Shared.Remote
 {
@@ -11,5 +12,11 @@ namespace TraktDl.Business.Shared.Remote
         /// </summary>
         /// <returns></returns>
         bool RefreshMissingEpisodes();
+
+        bool IsUsable { get; }
+
+        Task<DeviceToken> GetDeviceToken();
+
+        Task<bool> CheckAuthent(string deviceToken);
     }
 }

@@ -16,5 +16,10 @@ namespace TraktDl.Business.Mock.Remote.Tmdb
         {
             return true;
         }
+
+        public Show RefreshImage(uint id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

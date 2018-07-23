@@ -4,90 +4,30 @@
 
 <p></p>
 
+<div class="btn-group" role="group" aria-label="Middle Align">
+    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="getData()">
+        <i id="refreshButton" class="fa fa-refresh"></i> Refresh
+    </button>
+
+    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="updateTraking()">
+        <i id="updateButton" class="fa fa-refresh"></i> Update from Tracking
+    </button>
+
+    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="updateImages()">
+        <i id="imagesButton" class="fa fa-refresh"></i> Update Images and Metadata
+    </button>
+
+    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="resetBlacklist()">
+        <i id="blacklistReset" class="fa fa-refresh"></i> Reset Blacklist
+    </button>
+
+    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="resetImages()">
+        <i id="imagesReset" class="fa fa-refresh"></i> Reset Images
+    </button>
+</div>
+
+<p></p>
+
 <section class="watched" id="progress-wrapper">
     
 </section>
-
-
-<script id="template" type="x-tmpl-row">
-    <div class="row posters fanarts twenty-four-cols grid-item no-overlays">
-        <div class="col-md-3 hidden-xs hidden-sm">
-            <div class="poster">
-                <img src="{{ posterUrl }}" alt="Poster">
-            </div>
-        </div>
-        <div class="col-md-15 col-sm-8 main-info">
-            <h3 class="show-title">
-                {{ serieName }}
-            </h3>
-            <div class="row">
-                <div class="col-xs-11">
-                    <div class="progress">
-                        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{ percent }}" class="progress-bar progress-bar-striped progress-bar-{{progress-status percent}}" role="progressbar" style="width: {{ percent }}%">
-                            <div class="sr-only">{{ percent }}%</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-1 percentage">{{ percent }}%</div>
-            </div>
-            <p>Collected <strong>{{ collectedEpisodes }}</strong> of <strong>{{ totalEpisodes }}</strong> episodes, which leaves <strong>{{ missingEpisodes }}</strong> episodes left to collect.</p>
-            <div class="seasons">
-                <div class="collapse in" id="show-{{ id }}" style="">
-                    {{#each seasons}}
-                    <div class="grid-item" data-season-id="{{ id }}">
-                        <div class="info">
-                            <div class="row">
-                                <div class="col-xs-11 col-offset-xs-1">
-                                    <span class="season-toggle" data-show-id="{{ ../id }}" data-target="#season-{{ id }}" data-toggle="collapse">
-                                        <span class="">Season {{ seasonNumber }}</span>
-                                        <span class="episode-count">{{ collectedEpisodes }}/{{ totalEpisodes }} episodes</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-11">
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{ percent }}" class="progress-bar progress-bar-striped progress-bar-{{progress-status percent}}" role="progressbar" style="width: {{ percent }}%;">
-                                        <div class="sr-only">{{ percent }}%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-1 percentage">{{ percent }}%</div>
-                        </div>
-                        <div class="row collapse" id="season-{{ id }}">
-                            <div class="col-sm-11 col-xs-12">
-                                <div class="episodes">
-                                    {{#each episodes}}
-                                    <div class="episode {{episode-status status}}" data-episode-id="{{ id }}"><a href="#">
-    {{ ../seasonNumber }}x{{formatNumber episodeNumber useGrouping=false minimumIntegerDigits=2 }}</a></div>
-                                    {{/each}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-        </div>
-        {{#if nextEpisodeToCollect}}
-        <div class="grid-item col-md-6 col-sm-4 no-border">
-            <div class="fanart">
-                <img class="base" src="{{nextEpisodeToCollect.posterUrl}}" alt="Fanart">
-                <div class="loading">
-                    <div class="icon">
-                        <div class="fa fa-refresh fa-spin"></div>
-                    </div>
-                </div>
-                <div class="shadow-base"></div>
-                <div class="titles">
-                    <h4><span class="convert-date">{{nextEpisodeToCollect.airDate}}</span></h4>
-                    <h3><span class="main-title-sxe">
-    {{nextEpisodeToCollect.seasonNumber}}x{{formatNumber nextEpisodeToCollect.episodeNumber useGrouping=false minimumIntegerDigits=2 }}
-</span> <span class="main-title">{{truncate nextEpisodeToCollect.name}}</span></h3>
-                </div>
-            </div>
-        </div>
-        {{/if}}
-    </div>
-</script>

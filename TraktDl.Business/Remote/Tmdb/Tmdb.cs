@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMDbLib.Client;
 using TMDbLib.Objects.TvShows;
@@ -18,17 +19,23 @@ namespace TraktDl.Business.Remote.Tmdb
             Database = database;
         }
 
-        public bool RefreshImages()
+        private TMDbClient Setup()
         {
-            var shows = Database.GetMissingImages();
-
             TMDbClient client = new TMDbClient("8ba7498e29bcfba224bcf8161d734158");
 
             client.GetConfigAsync().Wait();
 
+            return client;
+        }
+
+        public bool RefreshImages()
+        {
+            var shows = Database.GetMissingImages();
+
+            var client = Setup();
+
             List<Task> tasks = new List<Task>();
             int counter = 0;
-
 
             foreach (var showSql in shows)
             {
@@ -48,22 +55,45 @@ namespace TraktDl.Business.Remote.Tmdb
             return true;
         }
 
+        public Show RefreshImage(uint id)
+        {
+            var show = Database.GetShow(id);
+
+            var client = Setup();
+
+            RefreshShow(client, show).Wait();
+
+            Database.AddOrUpdateShows(new List<ShowSql> { show });
+
+            return show.Convert();
+        }
+
         private async Task RefreshShow(TMDbClient client, ShowSql showSql)
         {
-            int showId;
-
-            if (showSql.Providers.ContainsKey(ProviderSql.Tmdb) && !string.IsNullOrEmpty(showSql.Providers[ProviderSql.Tmdb]) && Int32.TryParse(showSql.Providers[ProviderSql.Tmdb], out showId))
+            if (!showSql.Blacklisted && showSql.Providers.ContainsKey(ProviderSql.Tmdb) && !string.IsNullOrEmpty(showSql.Providers[ProviderSql.Tmdb]) && int.TryParse(showSql.Providers[ProviderSql.Tmdb], out var showId))
             {
                 List<Task> tasks = new List<Task>();
+                bool first = true;
 
                 // Refresh episodes
-                foreach (var seasonSql in showSql.Seasons)
+                foreach (var seasonSql in showSql.Seasons.Where(s => !s.Blacklisted))
                 {
                     foreach (var episodeSql in seasonSql.Episodes)
                     {
-                        await Task.Delay(1000);
+                        if (string.IsNullOrEmpty(episodeSql.PosterUrl) && episodeSql.Status == EpisodeStatusSql.Missing)
+                        {
+                            if (first)
+                            {
+                                first = false;
+                            }
+                            else
+                            {
+                                await Task.Delay(1000);
+                            }
 
-                        tasks.Add(RefreshEpisode(client, episodeSql, showId));
+
+                            tasks.Add(RefreshEpisode(client, episodeSql, showId));
+                        }
                     }
                 }
 
@@ -82,12 +112,9 @@ namespace TraktDl.Business.Remote.Tmdb
 
         private async Task RefreshEpisode(TMDbClient client, EpisodeSql episodeSql, int showId)
         {
-            if (string.IsNullOrEmpty(episodeSql.PosterUrl) && episodeSql.Status == EpisodeStatusSql.Missing)
-            {
-                TvEpisode tvEpisode = await client.GetTvEpisodeAsync(showId, episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
+            TvEpisode tvEpisode = await client.GetTvEpisodeAsync(showId, episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
 
-                episodeSql.Update(client.Config, tvEpisode);
-            }
+            episodeSql.Update(client.Config, tvEpisode);
         }
 
     }

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace TraktDl.Business.Shared.Remote
 {
-    public interface IImageApi
+    public class DeviceToken
     {
-        bool RefreshImages();
+        public string Token { get; set; }
 
-        Show RefreshImage(uint id);
+        public string Url { get; set; }
     }
 }
