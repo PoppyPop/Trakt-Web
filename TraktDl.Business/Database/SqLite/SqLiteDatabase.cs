@@ -61,13 +61,9 @@ namespace TraktDl.Business.Database.SqLite
             return context.Shows.ToList();
         }
 
-        private readonly object _getShowLock = new object();
         public ShowSql GetShow(uint id)
         {
-            lock (_getShowLock)
-            {
-                return context.Shows.SingleOrDefault(s => s.Id == id);
-            }
+            return context.Shows.SingleOrDefault(s => s.Id == id);
         }
 
         public List<ShowSql> GetMissingEpisode()
@@ -75,15 +71,15 @@ namespace TraktDl.Business.Database.SqLite
             return context.Shows
                 .Join(context.Seasons, show => show.Id, season => season.ShowID, (show, season) => new { show, season })
                 .Where(s => s.season.Episodes.Any(ep => ep.Status == EpisodeStatusSql.Missing))
-                .Select(s => s.show).ToList();
+                .Select(s => s.show).Distinct().ToList();
         }
 
         public List<ShowSql> GetMissingImages()
         {
             return context.Shows
                 .Join(context.Seasons, show => show.Id, season => season.ShowID, (show, season) => new { show, season })
-                .Where(s => string.IsNullOrEmpty(s.show.PosterUrl) || s.season.Episodes.Any(ep => string.IsNullOrEmpty(ep.PosterUrl)))
-                .Select(s => s.show).ToList();
+                .Where(s => s.season.Episodes.Any(ep => ep.Status == EpisodeStatusSql.Missing) && (string.IsNullOrEmpty(s.show.PosterUrl) || s.season.Episodes.Any(ep => string.IsNullOrEmpty(ep.PosterUrl))))
+                .Select(s => s.show).Distinct().ToList();
         }
 
 

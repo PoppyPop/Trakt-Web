@@ -82,7 +82,7 @@ namespace TraktDl.Business.Remote.Tmdb
 
         private async Task RefreshEpisode(TMDbClient client, EpisodeSql episodeSql, int showId)
         {
-            if (string.IsNullOrEmpty(episodeSql.PosterUrl))
+            if (string.IsNullOrEmpty(episodeSql.PosterUrl) && episodeSql.Status == EpisodeStatusSql.Missing)
             {
                 TvEpisode tvEpisode = await client.GetTvEpisodeAsync(showId, episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
 

@@ -166,16 +166,29 @@ namespace TraktDl.Business.Remote.Trakt
             return res;
         }
 
+        //private readonly object _getShowLock = new object();
+        private readonly object _getShowLock = new object();
+
+        private object ShowLock()
+        {
+            return _getShowLock;
+        }
+
         private ShowSql GetShow(uint id)
         {
-            var localShow = Database.GetShow(id);
+            ShowSql localShow = null;
 
-            if (localShow == null)
+            lock (ShowLock())
             {
-                localShow = new ShowSql(true)
+                localShow = Database.GetShow(id);
+
+                if (localShow == null)
                 {
-                    Id = id,
-                };
+                    localShow = new ShowSql(true)
+                    {
+                        Id = id,
+                    };
+                }
             }
 
             return localShow;
@@ -183,15 +196,20 @@ namespace TraktDl.Business.Remote.Trakt
 
         private SeasonSql GetSeason(ShowSql show, int seasonNumber)
         {
-            var localSeason = show.Seasons.SingleOrDefault(s => s.SeasonNumber == seasonNumber);
+            SeasonSql localSeason = null;
 
-            if (localSeason == null)
+            lock (ShowLock())
             {
-                localSeason = new SeasonSql(show)
+                localSeason = show.Seasons.SingleOrDefault(s => s.SeasonNumber == seasonNumber);
+
+                if (localSeason == null)
                 {
-                    SeasonNumber = seasonNumber,
-                };
-                show.Seasons.Add(localSeason);
+                    localSeason = new SeasonSql(show)
+                    {
+                        SeasonNumber = seasonNumber,
+                    };
+                    show.Seasons.Add(localSeason);
+                }
             }
 
             return localSeason;
@@ -199,16 +217,21 @@ namespace TraktDl.Business.Remote.Trakt
 
         private EpisodeSql GetEpisode(SeasonSql season, int episodeNumber)
         {
-            var localEpisode = season.Episodes.SingleOrDefault(s => s.EpisodeNumber == episodeNumber);
+            EpisodeSql localEpisode = null;
 
-            if (localEpisode == null)
+            lock (ShowLock())
             {
-                localEpisode = new EpisodeSql(season)
+                localEpisode = season.Episodes.SingleOrDefault(s => s.EpisodeNumber == episodeNumber);
+
+                if (localEpisode == null)
                 {
-                    EpisodeNumber = episodeNumber,
-                    Status = EpisodeStatusSql.Unknown,
-                };
-                season.Episodes.Add(localEpisode);
+                    localEpisode = new EpisodeSql(season)
+                    {
+                        EpisodeNumber = episodeNumber,
+                        Status = EpisodeStatusSql.Unknown,
+                    };
+                    season.Episodes.Add(localEpisode);
+                }
             }
 
             return localEpisode;
@@ -369,12 +392,6 @@ namespace TraktDl.Business.Remote.Trakt
                 {
                     var season = GetSeason(bddShow, showSeason.Season);
 
-                    // Remove watched from missing
-                    showSeason.MissingEpisodes.RemoveAll(m => m.Watched);
-
-                    // Remove collected from missing
-                    showSeason.MissingEpisodes.RemoveAll(m => m.Collected);
-
                     // BlackList Ended series if complete
                     if ((traktShow.Status == TraktShowStatus.Ended || traktShow.Status == TraktShowStatus.Canceled) && !showSeason.MissingEpisodes.Any())
                     {
@@ -387,9 +404,15 @@ namespace TraktDl.Business.Remote.Trakt
                         foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
                         {
                             var ep = GetEpisode(season, missingEpisode.Episode);
-                            ep.Status = missingEpisode.Collected ? EpisodeStatusSql.Collected : EpisodeStatusSql.Missing;
+                            ep.Status = missingEpisode.Collected || missingEpisode.Watched ? EpisodeStatusSql.Collected : EpisodeStatusSql.Missing;
                         }
                     }
+
+                    // Remove watched from missing
+                    showSeason.MissingEpisodes.RemoveAll(m => m.Watched);
+
+                    // Remove collected from missing
+                    showSeason.MissingEpisodes.RemoveAll(m => m.Collected);
                 }
 
                 traktShow.Seasons.RemoveAll(s => !s.MissingEpisodes.Any());
