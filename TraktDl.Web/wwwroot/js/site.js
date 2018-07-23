@@ -5,6 +5,8 @@
 
 const uri = 'api/show';
 
+HandlebarsIntl.registerWith(Handlebars);
+
 Handlebars.registerHelper('progress-status', function (percent) {
     if (percent >= 0 && percent < 25) {
         return "danger";

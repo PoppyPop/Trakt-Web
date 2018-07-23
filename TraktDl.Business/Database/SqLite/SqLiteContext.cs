@@ -87,8 +87,9 @@ namespace TraktDl.Business.Database.SqLite
             optionsBuilder
                 .UseSqlite("Data Source=AutoDl.db")
                 .UseLazyLoadingProxies()
-                .EnableSensitiveDataLogging()
-                .UseLoggerFactory(MyLoggerFactory);
+                //.EnableSensitiveDataLogging()
+                //.UseLoggerFactory(MyLoggerFactory)
+                ;
         }
     }
 }

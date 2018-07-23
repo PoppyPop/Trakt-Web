@@ -19,7 +19,7 @@ namespace TraktDl.Business.Shared.Remote
                 Status = (EpisodeStatus)Enum.Parse(typeof(EpisodeStatus),
                     Enum.GetName(typeof(EpisodeStatusSql), ep.Status)),
                 SeasonNumber = ep.Season.SeasonNumber,
-                AirDate = ep.AirDate,
+                AirDate = ep.AirDate?.ToString("dd/MM/yyyy"),
                 Name = ep.Name,
 
             };
