@@ -29,18 +29,5 @@ namespace TraktDl.Business.Database.SqLite
             Show = show;
             Episodes = new List<EpisodeSql>();
         }
-
-        public Shared.Remote.Season Convert()
-        {
-            Shared.Remote.Season season = new Shared.Remote.Season(Id)
-            {
-                SeasonNumber = SeasonNumber,
-                Blacklisted = Blacklisted,
-                Episodes = Episodes.Select(s => s.Convert()).ToList(),
-            };
-
-
-            return season;
-        }
     }
 }

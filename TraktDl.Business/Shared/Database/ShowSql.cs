@@ -50,27 +50,6 @@ namespace TraktDl.Business.Database.SqLite
         }
 
 
-        public Shared.Remote.Show Convert()
-        {
-            Shared.Remote.Show show = new Shared.Remote.Show
-            {
-                Id = Id,
-                Blacklisted = Blacklisted,
-                SerieName = Name,
-                Year = Year,
-                Providers = Providers.ToDictionary(
-                    pair => (Provider)Enum.Parse(typeof(Provider), Enum.GetName(typeof(ProviderSql), pair.Key)),
-                    pair => pair.Value),
-                PosterUrl = PosterUrl,
-            };
-
-            foreach (var seasonSqLite in Seasons)
-            {
-                show.Seasons.Add(seasonSqLite.Convert());
-            }
-
-
-            return show;
-        }
+        
     }
 }

@@ -59,10 +59,8 @@
                             <div class="col-sm-11 col-xs-12">
                                 <div class="episodes">
                                     {{#each episodes}}
-                                    <div class="episode check" data-episode-id="{{ id }}"><a href="#">{{ ../seasonNumber }}x{{ episodeNumber }}</a></div>
+                                    <div class="episode {{episode-status status}}" data-episode-id="{{ id }}"><a href="#">{{ ../seasonNumber }}x{{ episodeNumber }}</a></div>
                                     {{/each}}
-                                    <div class="episode other" data-episode-id="ff"><a href="#">ffx07</a></div>
-                                    <div class="episode delete" data-episode-id="dd"><a href="#">ddx22</a></div>
                                 </div>
                             </div>
                         </div>

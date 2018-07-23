@@ -20,7 +20,7 @@ namespace TraktDl.Business.Shared.Remote
 
         public string PosterUrl { get; set; }
 
-        public string AirDate { get; set; }
+        public DateTime? AirDate { get; set; }
 
         public Episode()
         {

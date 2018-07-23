@@ -21,6 +21,7 @@ namespace TraktDl.Business.Remote.Tmdb
         {
             episodeBdd.PosterUrl = config.Images.BaseUrl + "w300" + item.StillPath;
             episodeBdd.Name = item.Name;
+            episodeBdd.AirDate = item.AirDate;
 
             if (item.ExternalIds != null)
                 episodeBdd.Providers[ProviderSql.Imdb] = item.ExternalIds.ImdbId;

@@ -24,6 +24,16 @@ Handlebars.registerHelper('truncate', function (text) {
     return text;
 });
 
+Handlebars.registerHelper('episode-status', function (status) {
+    if (status == 0) {
+        return "other";
+    } else if (status == 1) {
+        return "check";
+    } else {
+        return "delete";
+    }
+});
+
 $(document).ready(function () {
     getData();
 });
