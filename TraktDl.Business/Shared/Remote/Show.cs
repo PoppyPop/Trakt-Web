@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TraktDl.Business.Shared.Remote
 {
@@ -15,6 +17,8 @@ namespace TraktDl.Business.Shared.Remote
         public Dictionary<Provider, string> Providers { get; set; }
 
         public List<Season> Seasons { get; set; }
+
+        public decimal Percent => Math.Round(Seasons.Average(s => s.Percent));
 
         public string PosterUrl { get; set; }
 

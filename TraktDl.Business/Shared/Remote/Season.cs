@@ -14,6 +14,21 @@ namespace TraktDl.Business.Shared.Remote
 
         public List<Episode> Episodes { get; set; }
 
+        public decimal Percent
+        {
+            get
+            {
+                var total = Episodes.Count;
+
+                if (total == 0)
+                    return 100;
+
+                var nbMissings = Episodes.Count(e => e.Status == EpisodeStatus.Missing);
+
+                return 100 - (nbMissings * 100 / total);
+            }
+        }
+
         public Season()
         {
             Episodes = new List<Episode>();

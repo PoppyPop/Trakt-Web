@@ -355,13 +355,12 @@ namespace TraktDl.Business.Remote.Trakt
                         traktShow.Seasons.Add(misSeason);
                     }
 
-                    foreach (ITraktEpisodeCollectionProgress episode in season.Episodes.Where(e =>
-                        !e.Completed.HasValue || !e.Completed.Value))
+                    foreach (ITraktEpisodeCollectionProgress episode in season.Episodes)
                     {
                         // Already existing in missing
                         if (misSeason.MissingEpisodes.All(m => m.Episode != episode.Number))
                         {
-                            misSeason.MissingEpisodes.Add(new TraktEpisode { Episode = episode.Number.Value });
+                            misSeason.MissingEpisodes.Add(new TraktEpisode { Episode = episode.Number.Value, Collected = episode.Completed.HasValue && episode.Completed.Value });
                         }
                     }
                 }
@@ -388,7 +387,7 @@ namespace TraktDl.Business.Remote.Trakt
                         foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
                         {
                             var ep = GetEpisode(season, missingEpisode.Episode);
-                            ep.Status = EpisodeStatusSql.Missing;
+                            ep.Status = missingEpisode.Collected ? EpisodeStatusSql.Collected : EpisodeStatusSql.Missing;
                         }
                     }
                 }
