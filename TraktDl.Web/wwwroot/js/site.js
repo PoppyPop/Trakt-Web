@@ -17,6 +17,13 @@ Handlebars.registerHelper('progress-status', function (percent) {
     }
 });
 
+Handlebars.registerHelper('truncate', function (text) {
+    if (text && text.length > 41) {
+        return text.substring(0, 38)+"...";
+    } 
+    return text;
+});
+
 $(document).ready(function () {
     getData();
 });

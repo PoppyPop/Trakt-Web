@@ -22,6 +22,14 @@ namespace TraktDl.Business.Shared.Remote
 
         public string PosterUrl { get; set; }
 
+        public int TotalEpisodes => Seasons.Sum(s => s.TotalEpisodes);
+
+        public int CollectedEpisodes => Seasons.Sum(s => s.CollectedEpisodes);
+
+        public int MissingEpisodes => Seasons.Sum(s => s.MissingEpisodes);
+
+        public Episode NextEpisodeToCollect => Seasons.OrderBy(s => s.SeasonNumber).FirstOrDefault(s => s.NextEpisodeToCollect != null)?.NextEpisodeToCollect;
+
         public Show()
         {
             Providers = new Dictionary<Provider, string>();

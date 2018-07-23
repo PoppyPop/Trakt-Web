@@ -57,7 +57,9 @@ namespace TraktDl.Business.Database.SqLite
                     pair => pair.Value),
                 PosterUrl = PosterUrl,
                 Status = (EpisodeStatus)Enum.Parse(typeof(EpisodeStatus),
-                    Enum.GetName(typeof(EpisodeStatusSql), Status))
+                    Enum.GetName(typeof(EpisodeStatusSql), Status)),
+                SeasonNumber = Season.SeasonNumber
+                    
             };
 
             return episode;

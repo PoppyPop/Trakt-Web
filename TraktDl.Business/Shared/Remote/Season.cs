@@ -14,20 +14,15 @@ namespace TraktDl.Business.Shared.Remote
 
         public List<Episode> Episodes { get; set; }
 
-        public decimal Percent
-        {
-            get
-            {
-                var total = Episodes.Count;
+        public decimal Percent => (TotalEpisodes == 0) ? 100 : (CollectedEpisodes * 100 / TotalEpisodes);
 
-                if (total == 0)
-                    return 100;
+        public int TotalEpisodes => Episodes.Count;
 
-                var nbMissings = Episodes.Count(e => e.Status == EpisodeStatus.Missing);
+        public int CollectedEpisodes => TotalEpisodes - MissingEpisodes;
 
-                return 100 - (nbMissings * 100 / total);
-            }
-        }
+        public int MissingEpisodes => Episodes.Count(e => e.Status == EpisodeStatus.Missing);
+
+        public Episode NextEpisodeToCollect => Episodes.OrderBy(s => s.EpisodeNumber).FirstOrDefault(s => s.Status == EpisodeStatus.Missing);
 
         public Season()
         {

@@ -10,6 +10,8 @@ namespace TraktDl.Business.Shared.Remote
 
         public int EpisodeNumber { get; set; }
 
+        public int SeasonNumber { get; set; }
+
         public string Name { get; set; }
 
         public EpisodeStatus Status { get; set; }
@@ -17,6 +19,8 @@ namespace TraktDl.Business.Shared.Remote
         public Dictionary<Provider, string> Providers { get; set; }
 
         public string PosterUrl { get; set; }
+
+        public string AirDate { get; set; }
 
         public Episode()
         {
