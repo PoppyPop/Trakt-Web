@@ -14,6 +14,8 @@ namespace TraktDl.Business.Remote.Tmdb
     {
         private IDatabase Database { get; }
 
+        private string ApiKeyName => "Tmdb";
+
         public Tmdb(IDatabase database)
         {
             Database = database;
@@ -21,11 +23,17 @@ namespace TraktDl.Business.Remote.Tmdb
 
         private TMDbClient Setup()
         {
-            TMDbClient client = new TMDbClient("8ba7498e29bcfba224bcf8161d734158");
+            if (IsUsable)
+            {
+                var token = GetAuthToken();
+                TMDbClient client = new TMDbClient(token);
 
-            client.GetConfigAsync().Wait();
+                client.GetConfigAsync().Wait();
 
-            return client;
+                return client;
+            }
+
+            throw new Exception("Not authenticated");
         }
 
         public bool RefreshImages()
@@ -66,6 +74,32 @@ namespace TraktDl.Business.Remote.Tmdb
             Database.AddOrUpdateShows(new List<ShowSql> { show });
 
             return show.Convert();
+        }
+
+
+        private string GetAuthToken()
+        {
+            var key = Database.GetApiKey(ApiKeyName);
+
+            if (key != null)
+            {
+                return key.ApiData;
+            }
+
+            return null;
+        }
+
+        public bool IsUsable => GetAuthToken() != null;
+
+        public Task<DeviceToken> GetDeviceToken()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> CheckAuthent(string deviceToken)
+        {
+            Database.AddApiKey(new ApiKeySql() { Id = ApiKeyName, ApiData = deviceToken });
+            return true;
         }
 
         private async Task RefreshShow(TMDbClient client, ShowSql showSql)
