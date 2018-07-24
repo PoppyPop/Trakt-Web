@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
 using TraktDl.Business.Shared.Database;
@@ -83,8 +84,25 @@ namespace TraktDl.Business.Database.SqLite
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation
+                .IsOSPlatform(OSPlatform.Windows);
+
+            bool isLinux = System.Runtime.InteropServices.RuntimeInformation
+                .IsOSPlatform(OSPlatform.Linux);
+
+            string dataSource = "";
+
+            if (isWindows)
+            {
+                dataSource = "Data Source=AutoDl.db";
+            }
+            else if (isLinux)
+            {
+                dataSource = "Data Source=/datas/AutoDl.db";
+            }
+
             optionsBuilder
-                .UseSqlite("Data Source=AutoDl.db")
+                .UseSqlite(dataSource)
                 .UseLazyLoadingProxies()
                 //.EnableSensitiveDataLogging()
                 //.UseLoggerFactory(MyLoggerFactory)
