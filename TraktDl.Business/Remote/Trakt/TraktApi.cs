@@ -30,7 +30,7 @@ namespace TraktDl.Business.Remote.Trakt
 
         private TraktClient Client { get; set; }
 
-        private string ApiKeyName => Client.Configuration.UseSandboxEnvironment ? "Trakt.Sandbox" : "Trakt";
+        private string ApiKeyName => TraktApiClient.GetMode == ApiMode.Sandbox ? "Trakt.Sandbox" : "Trakt";
 
         public TraktApi(ITraktApiClient client, IDatabase database)
         {

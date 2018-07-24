@@ -4,7 +4,7 @@ namespace TraktDl.Business.Remote.Trakt
 {
     public class TraktApiClient : ITraktApiClient
     {
-        public string GetMode => "Production";
+        public ApiMode GetMode => ApiMode.Production;
 
         public TraktClient Client
         {

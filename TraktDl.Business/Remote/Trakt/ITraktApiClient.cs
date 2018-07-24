@@ -4,8 +4,14 @@ namespace TraktDl.Business.Remote.Trakt
 {
     public interface ITraktApiClient
     {
-        string GetMode { get; }
+        ApiMode GetMode { get; }
 
         TraktClient Client { get; }
+    }
+
+    public enum ApiMode
+    {
+        Production,
+        Sandbox
     }
 }

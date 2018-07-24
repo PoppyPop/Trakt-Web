@@ -4,7 +4,7 @@ namespace TraktDl.Business.Remote.Trakt
 {
     public class TraktApiClientSandbox : ITraktApiClient
     {
-        public string GetMode => "Sandbox";
+        public ApiMode GetMode => ApiMode.Sandbox;
 
         public TraktClient Client
         {
