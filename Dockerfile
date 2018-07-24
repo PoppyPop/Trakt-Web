@@ -17,7 +17,9 @@ RUN dotnet publish -c Release -o out
 FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine AS runtime
 WORKDIR /app
 
-EXPOSE 5000
+EXPOSE 80
+
+VOLUME /datas
 
 COPY --from=build /app/TraktDl.Web/out ./
 ENTRYPOINT ["dotnet", "TraktDl.Web.dll"]
