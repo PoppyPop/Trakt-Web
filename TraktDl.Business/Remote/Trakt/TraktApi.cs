@@ -36,24 +36,29 @@ namespace TraktDl.Business.Remote.Trakt
         {
             TraktApiClient = client;
             Database = database;
+
+            Client = GetClient();
         }
 
-        private void SetupClient()
+        private TraktClient GetClient()
         {
-            var client = TraktApiClient.Client;
+            TraktClient client = TraktApiClient.Client;
 
             if (!client.IsValidForAuthenticationProcess)
                 throw new InvalidOperationException("Trakt Client not valid for authentication");
 
             client.Configuration.ForceAuthorization = true;
 
-            Client = client;
+            return client;
+        }
 
+        private void SetupClient()
+        {
             if (IsUsable)
             {
                 var token = GetAuthToken();
                 var authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
-                client.Authorization = authorization;
+                Client.Authorization = authorization;
 
                 RefreshAuthorization().Wait();
             }
@@ -65,22 +70,13 @@ namespace TraktDl.Business.Remote.Trakt
 
         private async Task TryToDeviceAuthenticate()
         {
-            TraktResponse<ITraktDevice> device = await Client.Authentication.GenerateDeviceAsync();
+            TraktResponse<ITraktAuthorization> authorization = await Client.Authentication.PollForAuthorizationAsync();
 
-            if (device.HasValue && device.Value.IsValid)
+            if (authorization.HasValue && authorization.Value.IsValid)
             {
-                Console.WriteLine("You have to authenticate this application.");
-                Console.WriteLine($"Please visit the following webpage: {device.Value.VerificationUrl}");
-                Console.WriteLine($"Sign in or sign up on that webpage and enter the following code: {device.Value.UserCode}");
+                SaveAuthToken(new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
 
-                TraktResponse<ITraktAuthorization> authorization = await Client.Authentication.PollForAuthorizationAsync();
-
-                if (authorization.HasValue && authorization.Value.IsValid)
-                {
-                    SaveAuthToken(new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
-
-                    Console.WriteLine("-------------- Authentication successful --------------");
-                }
+                Console.WriteLine("-------------- Authentication successful --------------");
             }
         }
 
@@ -124,7 +120,9 @@ namespace TraktDl.Business.Remote.Trakt
                 Console.WriteLine($"Please visit the following webpage: {device.Value.VerificationUrl}");
                 Console.WriteLine($"Sign in or sign up on that webpage and enter the following code: {device.Value.UserCode}");
 
-                return new DeviceToken {Token = device.Value.UserCode, Url = device.Value.VerificationUrl };
+                await TryToDeviceAuthenticate();
+
+                return new DeviceToken { Token = device.Value.UserCode, Url = device.Value.VerificationUrl };
             }
 
             return null;

@@ -25,6 +25,16 @@
         "handlebars.min.js",
         "handlebars.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery-loading-overlay@2.1.5",
+      "destination": "wwwroot/lib/loading-overlay/",
+      "files": [
+        "loadingoverlay.js",
+        "loadingoverlay.min.js",
+        "loadingoverlay.min.js.map"
+      ]
     }
   ]
 }

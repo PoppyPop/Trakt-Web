@@ -92,7 +92,13 @@ function updateImages() {
     });
 }
 
-function updateImage(show) {
+function updateImage(show, next) {
+
+    $('#show-wait-poster-' + show).LoadingOverlay("show");
+
+    if (next) {
+        $('#show-wait-fanart-' + show).LoadingOverlay("show");
+    }
 
     $.ajax({
         type: 'POST',
@@ -100,8 +106,16 @@ function updateImage(show) {
         success: function (data) {
 
             $('#show-poster-' + show).attr("src", data.posterUrl);
+            $('#show-wait-poster-' + show).LoadingOverlay("hide");
+
             if (data.nextEpisodeToCollect) {
                 $('#show-collect-poster-' + show).attr("src", data.nextEpisodeToCollect.posterUrl);
+                $('#show-collect-name-' + show).text(data.nextEpisodeToCollect.name);
+                $('#show-collect-date-' + show).text(data.nextEpisodeToCollect.airDate);
+            }
+
+            if (next) {
+                $('#show-wait-fanart-' + show).LoadingOverlay("hide");
             }
         }
     });
@@ -120,7 +134,7 @@ function getData() {
                 $('#progress-wrapper').append(Handlebars.templates.row(item));
 
                 if (!item.posterUrl || (item.nextEpisodeToCollect && !item.nextEpisodeToCollect.posterUrl)) {
-                    updateImage(item.id);
+                    updateImage(item.id, item.nextEpisodeToCollect);
                 }
 
             });

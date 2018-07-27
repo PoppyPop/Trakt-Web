@@ -43,29 +43,37 @@ templates['row'] = template({"1":function(container,depth0,helpers,partials,data
     + alias3((helpers.formatNumber || (depth0 && depth0.formatNumber) || alias2).call(alias1,(depth0 != null ? depth0.episodeNumber : depth0),{"name":"formatNumber","hash":{"minimumIntegerDigits":2,"useGrouping":false},"data":data}))
     + "</a></div>\r\n";
 },"4":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression, alias4=container.lambda;
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
-  return "        <div class=\"grid-item col-md-6 col-sm-4 no-border\">\r\n            <div class=\"fanart\">\r\n                <img id=\"show-collect-poster-"
-    + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"base\" src=\""
-    + alias3(alias4(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.posterUrl : stack1), depth0))
-    + "\" alt=\"Fanart\">\r\n                <div class=\"loading\">\r\n                    <div class=\"icon\">\r\n                        <div class=\"fa fa-refresh fa-spin\"></div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"shadow-base\"></div>\r\n                <div class=\"titles\">\r\n                    <h4><span class=\"convert-date\">"
-    + alias3(alias4(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.airDate : stack1), depth0))
-    + "</span></h4>\r\n                    <h3><span class=\"main-title-sxe\">\r\n    "
-    + alias3(alias4(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.seasonNumber : stack1), depth0))
+  return "        <div id=\"show-wait-fanart-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" class=\"grid-item col-md-6 col-sm-4 no-border\">\r\n            <div class=\"fanart\">\r\n                <img class=\"base\" src=\"/images/episodes.png\" alt=\"Fanart\">\r\n                <img id=\"show-collect-poster-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" class=\"real\" src=\""
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.posterUrl : stack1), depth0))
+    + "\" alt=\"Fanart\" style=\"display: block;\">\r\n                <div class=\"loading\">\r\n                    <div class=\"icon\">\r\n                        <div class=\"fa fa-refresh fa-spin\"></div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"shadow-base\"></div>\r\n                <div class=\"titles\">\r\n                    <h4><span class=\"convert-date\" id=\"show-collect-date-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.airDate : stack1), depth0))
+    + "</span></h4>\r\n                    <h3>\r\n                        <span class=\"main-title-sxe\">\r\n                            "
+    + alias4(alias5(((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.seasonNumber : stack1), depth0))
     + "x"
-    + alias3((helpers.formatNumber || (depth0 && depth0.formatNumber) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.episodeNumber : stack1),{"name":"formatNumber","hash":{"minimumIntegerDigits":2,"useGrouping":false},"data":data}))
-    + "\r\n</span> <span class=\"main-title\">"
-    + alias3((helpers.truncate || (depth0 && depth0.truncate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.name : stack1),{"name":"truncate","hash":{},"data":data}))
-    + "</span></h3>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + alias4((helpers.formatNumber || (depth0 && depth0.formatNumber) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.episodeNumber : stack1),{"name":"formatNumber","hash":{"minimumIntegerDigits":2,"useGrouping":false},"data":data}))
+    + "\r\n                        </span> <span class=\"main-title\" id=\"show-collect-name-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">"
+    + alias4((helpers.truncate || (depth0 && depth0.truncate) || alias2).call(alias1,((stack1 = (depth0 != null ? depth0.nextEpisodeToCollect : depth0)) != null ? stack1.name : stack1),{"name":"truncate","hash":{},"data":data}))
+    + "</span>\r\n                    </h3>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return " <div class=\"row posters fanarts twenty-four-cols grid-item no-overlays\">\r\n        <div class=\"col-md-3 hidden-xs hidden-sm\">\r\n            <div class=\"poster\">\r\n                <img id=\"show-poster-"
+  return " <div class=\"row posters fanarts twenty-four-cols grid-item no-overlays\">\r\n        <div id=\"show-wait-poster-"
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\" class=\"col-md-3 hidden-xs hidden-sm\">\r\n            <div class=\"poster\">\r\n                <img class=\"base\" src=\"/images/posters.png\" alt=\"Fanart\">\r\n                <img class=\"real\" id=\"show-poster-"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\" src=\""
     + alias4(((helper = (helper = helpers.posterUrl || (depth0 != null ? depth0.posterUrl : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"posterUrl","hash":{},"data":data}) : helper)))
-    + "\" alt=\"Poster\">\r\n            </div>\r\n        </div>\r\n        <div class=\"col-md-15 col-sm-8 main-info\">\r\n            <h3 class=\"show-title\">\r\n                "
+    + "\" alt=\"Poster\" style=\"display: block;\">\r\n            </div>\r\n        </div>\r\n        <div class=\"col-md-15 col-sm-8 main-info\">\r\n            <h3 class=\"show-title\">\r\n                "
     + alias4(((helper = (helper = helpers.serieName || (depth0 != null ? depth0.serieName : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"serieName","hash":{},"data":data}) : helper)))
     + "\r\n            </h3>\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-11\">\r\n                    <div class=\"progress\">\r\n                        <div aria-valuemax=\"100\" aria-valuemin=\"0\" aria-valuenow=\""
     + alias4(((helper = (helper = helpers.percent || (depth0 != null ? depth0.percent : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"percent","hash":{},"data":data}) : helper)))

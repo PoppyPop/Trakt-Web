@@ -10,5 +10,11 @@
     "inputFiles": [
       "wwwroot/js/site.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/handlebars/row.min.js",
+    "inputFiles": [
+      "wwwroot/lib/handlebars/row.js"
+    ]
   }
 ]

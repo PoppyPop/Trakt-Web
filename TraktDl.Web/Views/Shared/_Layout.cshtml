@@ -61,6 +61,7 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/handlebars/dist/handlebars.js"></script>
         <script src="~/lib/handlebars/dist/handlebars-intl.js"></script>
+        <script src="~/lib/loading-overlay/loadingoverlay.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/lib/handlebars/row.js" asp-append-version="true"></script>
     </environment>
@@ -89,9 +90,15 @@
                 asp-fallback-test="window.jQuery"
                 integrity="sha256-mxEYu7sLsucO7uiCyRWvQpJ6YlXoBXggKlrxMbncTKs=" crossorigin="anonymous">
         </script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.5/dist/loadingoverlay.min.js" 
+                asp-fallback-src="~/lib/loading-overlay/loadingoverlay.min.js"
+                asp-fallback-test="window.jQuery"
+                integrity="sha256-11m5FVpAq0jjGFeQ+jOMLlBCyLdo4VRP7GGjWBW6Jb4=" crossorigin="anonymous">
+        </script>
 
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-        <script src="~/lib/handlebars/row.js" asp-append-version="true"></script>
+        <script src="~/lib/handlebars/row.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

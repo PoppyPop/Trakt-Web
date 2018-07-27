@@ -36,6 +36,851 @@ body {
     }
 }
 
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+    position: relative;
+    min-height: 1px;
+    padding-left: 10px;
+    padding-right: 10px
+}
+
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    float: left
+}
+
+.col-xs-1 {
+    width: 8.33333333%
+}
+
+.col-xs-2 {
+    width: 16.66666667%
+}
+
+.col-xs-3 {
+    width: 25%
+}
+
+.col-xs-4 {
+    width: 33.33333333%
+}
+
+.col-xs-5 {
+    width: 41.66666667%
+}
+
+.col-xs-6 {
+    width: 50%
+}
+
+.col-xs-7 {
+    width: 58.33333333%
+}
+
+.col-xs-8 {
+    width: 66.66666667%
+}
+
+.col-xs-9 {
+    width: 75%
+}
+
+.col-xs-10 {
+    width: 83.33333333%
+}
+
+.col-xs-11 {
+    width: 91.66666667%
+}
+
+.col-xs-12 {
+    width: 100%
+}
+
+.col-xs-pull-0 {
+    right: auto
+}
+
+.col-xs-pull-1 {
+    right: 8.33333333%
+}
+
+.col-xs-pull-2 {
+    right: 16.66666667%
+}
+
+.col-xs-pull-3 {
+    right: 25%
+}
+
+.col-xs-pull-4 {
+    right: 33.33333333%
+}
+
+.col-xs-pull-5 {
+    right: 41.66666667%
+}
+
+.col-xs-pull-6 {
+    right: 50%
+}
+
+.col-xs-pull-7 {
+    right: 58.33333333%
+}
+
+.col-xs-pull-8 {
+    right: 66.66666667%
+}
+
+.col-xs-pull-9 {
+    right: 75%
+}
+
+.col-xs-pull-10 {
+    right: 83.33333333%
+}
+
+.col-xs-pull-11 {
+    right: 91.66666667%
+}
+
+.col-xs-pull-12 {
+    right: 100%
+}
+
+.col-xs-push-0 {
+    left: auto
+}
+
+.col-xs-push-1 {
+    left: 8.33333333%
+}
+
+.col-xs-push-2 {
+    left: 16.66666667%
+}
+
+.col-xs-push-3 {
+    left: 25%
+}
+
+.col-xs-push-4 {
+    left: 33.33333333%
+}
+
+.col-xs-push-5 {
+    left: 41.66666667%
+}
+
+.col-xs-push-6 {
+    left: 50%
+}
+
+.col-xs-push-7 {
+    left: 58.33333333%
+}
+
+.col-xs-push-8 {
+    left: 66.66666667%
+}
+
+.col-xs-push-9 {
+    left: 75%
+}
+
+.col-xs-push-10 {
+    left: 83.33333333%
+}
+
+.col-xs-push-11 {
+    left: 91.66666667%
+}
+
+.col-xs-push-12 {
+    left: 100%
+}
+
+.col-xs-offset-0 {
+    margin-left: 0%
+}
+
+.col-xs-offset-1 {
+    margin-left: 8.33333333%
+}
+
+.col-xs-offset-2 {
+    margin-left: 16.66666667%
+}
+
+.col-xs-offset-3 {
+    margin-left: 25%
+}
+
+.col-xs-offset-4 {
+    margin-left: 33.33333333%
+}
+
+.col-xs-offset-5 {
+    margin-left: 41.66666667%
+}
+
+.col-xs-offset-6 {
+    margin-left: 50%
+}
+
+.col-xs-offset-7 {
+    margin-left: 58.33333333%
+}
+
+.col-xs-offset-8 {
+    margin-left: 66.66666667%
+}
+
+.col-xs-offset-9 {
+    margin-left: 75%
+}
+
+.col-xs-offset-10 {
+    margin-left: 83.33333333%
+}
+
+.col-xs-offset-11 {
+    margin-left: 91.66666667%
+}
+
+.col-xs-offset-12 {
+    margin-left: 100%
+}
+
+@media(min-width:768px) {
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+        float: left
+    }
+
+    .col-sm-1 {
+        width: 8.33333333%
+    }
+
+    .col-sm-2 {
+        width: 16.66666667%
+    }
+
+    .col-sm-3 {
+        width: 25%
+    }
+
+    .col-sm-4 {
+        width: 33.33333333%
+    }
+
+    .col-sm-5 {
+        width: 41.66666667%
+    }
+
+    .col-sm-6 {
+        width: 50%
+    }
+
+    .col-sm-7 {
+        width: 58.33333333%
+    }
+
+    .col-sm-8 {
+        width: 66.66666667%
+    }
+
+    .col-sm-9 {
+        width: 75%
+    }
+
+    .col-sm-10 {
+        width: 83.33333333%
+    }
+
+    .col-sm-11 {
+        width: 91.66666667%
+    }
+
+    .col-sm-12 {
+        width: 100%
+    }
+
+    .col-sm-pull-0 {
+        right: auto
+    }
+
+    .col-sm-pull-1 {
+        right: 8.33333333%
+    }
+
+    .col-sm-pull-2 {
+        right: 16.66666667%
+    }
+
+    .col-sm-pull-3 {
+        right: 25%
+    }
+
+    .col-sm-pull-4 {
+        right: 33.33333333%
+    }
+
+    .col-sm-pull-5 {
+        right: 41.66666667%
+    }
+
+    .col-sm-pull-6 {
+        right: 50%
+    }
+
+    .col-sm-pull-7 {
+        right: 58.33333333%
+    }
+
+    .col-sm-pull-8 {
+        right: 66.66666667%
+    }
+
+    .col-sm-pull-9 {
+        right: 75%
+    }
+
+    .col-sm-pull-10 {
+        right: 83.33333333%
+    }
+
+    .col-sm-pull-11 {
+        right: 91.66666667%
+    }
+
+    .col-sm-pull-12 {
+        right: 100%
+    }
+
+    .col-sm-push-0 {
+        left: auto
+    }
+
+    .col-sm-push-1 {
+        left: 8.33333333%
+    }
+
+    .col-sm-push-2 {
+        left: 16.66666667%
+    }
+
+    .col-sm-push-3 {
+        left: 25%
+    }
+
+    .col-sm-push-4 {
+        left: 33.33333333%
+    }
+
+    .col-sm-push-5 {
+        left: 41.66666667%
+    }
+
+    .col-sm-push-6 {
+        left: 50%
+    }
+
+    .col-sm-push-7 {
+        left: 58.33333333%
+    }
+
+    .col-sm-push-8 {
+        left: 66.66666667%
+    }
+
+    .col-sm-push-9 {
+        left: 75%
+    }
+
+    .col-sm-push-10 {
+        left: 83.33333333%
+    }
+
+    .col-sm-push-11 {
+        left: 91.66666667%
+    }
+
+    .col-sm-push-12 {
+        left: 100%
+    }
+
+    .col-sm-offset-0 {
+        margin-left: 0%
+    }
+
+    .col-sm-offset-1 {
+        margin-left: 8.33333333%
+    }
+
+    .col-sm-offset-2 {
+        margin-left: 16.66666667%
+    }
+
+    .col-sm-offset-3 {
+        margin-left: 25%
+    }
+
+    .col-sm-offset-4 {
+        margin-left: 33.33333333%
+    }
+
+    .col-sm-offset-5 {
+        margin-left: 41.66666667%
+    }
+
+    .col-sm-offset-6 {
+        margin-left: 50%
+    }
+
+    .col-sm-offset-7 {
+        margin-left: 58.33333333%
+    }
+
+    .col-sm-offset-8 {
+        margin-left: 66.66666667%
+    }
+
+    .col-sm-offset-9 {
+        margin-left: 75%
+    }
+
+    .col-sm-offset-10 {
+        margin-left: 83.33333333%
+    }
+
+    .col-sm-offset-11 {
+        margin-left: 91.66666667%
+    }
+
+    .col-sm-offset-12 {
+        margin-left: 100%
+    }
+}
+
+@media(min-width:992px) {
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+        float: left
+    }
+
+    .col-md-1 {
+        width: 8.33333333%
+    }
+
+    .col-md-2 {
+        width: 16.66666667%
+    }
+
+    .col-md-3 {
+        width: 25%
+    }
+
+    .col-md-4 {
+        width: 33.33333333%
+    }
+
+    .col-md-5 {
+        width: 41.66666667%
+    }
+
+    .col-md-6 {
+        width: 50%
+    }
+
+    .col-md-7 {
+        width: 58.33333333%
+    }
+
+    .col-md-8 {
+        width: 66.66666667%
+    }
+
+    .col-md-9 {
+        width: 75%
+    }
+
+    .col-md-10 {
+        width: 83.33333333%
+    }
+
+    .col-md-11 {
+        width: 91.66666667%
+    }
+
+    .col-md-12 {
+        width: 100%
+    }
+
+    .col-md-pull-0 {
+        right: auto
+    }
+
+    .col-md-pull-1 {
+        right: 8.33333333%
+    }
+
+    .col-md-pull-2 {
+        right: 16.66666667%
+    }
+
+    .col-md-pull-3 {
+        right: 25%
+    }
+
+    .col-md-pull-4 {
+        right: 33.33333333%
+    }
+
+    .col-md-pull-5 {
+        right: 41.66666667%
+    }
+
+    .col-md-pull-6 {
+        right: 50%
+    }
+
+    .col-md-pull-7 {
+        right: 58.33333333%
+    }
+
+    .col-md-pull-8 {
+        right: 66.66666667%
+    }
+
+    .col-md-pull-9 {
+        right: 75%
+    }
+
+    .col-md-pull-10 {
+        right: 83.33333333%
+    }
+
+    .col-md-pull-11 {
+        right: 91.66666667%
+    }
+
+    .col-md-pull-12 {
+        right: 100%
+    }
+
+    .col-md-push-0 {
+        left: auto
+    }
+
+    .col-md-push-1 {
+        left: 8.33333333%
+    }
+
+    .col-md-push-2 {
+        left: 16.66666667%
+    }
+
+    .col-md-push-3 {
+        left: 25%
+    }
+
+    .col-md-push-4 {
+        left: 33.33333333%
+    }
+
+    .col-md-push-5 {
+        left: 41.66666667%
+    }
+
+    .col-md-push-6 {
+        left: 50%
+    }
+
+    .col-md-push-7 {
+        left: 58.33333333%
+    }
+
+    .col-md-push-8 {
+        left: 66.66666667%
+    }
+
+    .col-md-push-9 {
+        left: 75%
+    }
+
+    .col-md-push-10 {
+        left: 83.33333333%
+    }
+
+    .col-md-push-11 {
+        left: 91.66666667%
+    }
+
+    .col-md-push-12 {
+        left: 100%
+    }
+
+    .col-md-offset-0 {
+        margin-left: 0%
+    }
+
+    .col-md-offset-1 {
+        margin-left: 8.33333333%
+    }
+
+    .col-md-offset-2 {
+        margin-left: 16.66666667%
+    }
+
+    .col-md-offset-3 {
+        margin-left: 25%
+    }
+
+    .col-md-offset-4 {
+        margin-left: 33.33333333%
+    }
+
+    .col-md-offset-5 {
+        margin-left: 41.66666667%
+    }
+
+    .col-md-offset-6 {
+        margin-left: 50%
+    }
+
+    .col-md-offset-7 {
+        margin-left: 58.33333333%
+    }
+
+    .col-md-offset-8 {
+        margin-left: 66.66666667%
+    }
+
+    .col-md-offset-9 {
+        margin-left: 75%
+    }
+
+    .col-md-offset-10 {
+        margin-left: 83.33333333%
+    }
+
+    .col-md-offset-11 {
+        margin-left: 91.66666667%
+    }
+
+    .col-md-offset-12 {
+        margin-left: 100%
+    }
+}
+
+@media(min-width:1200px) {
+    .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+        float: left
+    }
+
+    .col-lg-1 {
+        width: 8.33333333%
+    }
+
+    .col-lg-2 {
+        width: 16.66666667%
+    }
+
+    .col-lg-3 {
+        width: 25%
+    }
+
+    .col-lg-4 {
+        width: 33.33333333%
+    }
+
+    .col-lg-5 {
+        width: 41.66666667%
+    }
+
+    .col-lg-6 {
+        width: 50%
+    }
+
+    .col-lg-7 {
+        width: 58.33333333%
+    }
+
+    .col-lg-8 {
+        width: 66.66666667%
+    }
+
+    .col-lg-9 {
+        width: 75%
+    }
+
+    .col-lg-10 {
+        width: 83.33333333%
+    }
+
+    .col-lg-11 {
+        width: 91.66666667%
+    }
+
+    .col-lg-12 {
+        width: 100%
+    }
+
+    .col-lg-pull-0 {
+        right: auto
+    }
+
+    .col-lg-pull-1 {
+        right: 8.33333333%
+    }
+
+    .col-lg-pull-2 {
+        right: 16.66666667%
+    }
+
+    .col-lg-pull-3 {
+        right: 25%
+    }
+
+    .col-lg-pull-4 {
+        right: 33.33333333%
+    }
+
+    .col-lg-pull-5 {
+        right: 41.66666667%
+    }
+
+    .col-lg-pull-6 {
+        right: 50%
+    }
+
+    .col-lg-pull-7 {
+        right: 58.33333333%
+    }
+
+    .col-lg-pull-8 {
+        right: 66.66666667%
+    }
+
+    .col-lg-pull-9 {
+        right: 75%
+    }
+
+    .col-lg-pull-10 {
+        right: 83.33333333%
+    }
+
+    .col-lg-pull-11 {
+        right: 91.66666667%
+    }
+
+    .col-lg-pull-12 {
+        right: 100%
+    }
+
+    .col-lg-push-0 {
+        left: auto
+    }
+
+    .col-lg-push-1 {
+        left: 8.33333333%
+    }
+
+    .col-lg-push-2 {
+        left: 16.66666667%
+    }
+
+    .col-lg-push-3 {
+        left: 25%
+    }
+
+    .col-lg-push-4 {
+        left: 33.33333333%
+    }
+
+    .col-lg-push-5 {
+        left: 41.66666667%
+    }
+
+    .col-lg-push-6 {
+        left: 50%
+    }
+
+    .col-lg-push-7 {
+        left: 58.33333333%
+    }
+
+    .col-lg-push-8 {
+        left: 66.66666667%
+    }
+
+    .col-lg-push-9 {
+        left: 75%
+    }
+
+    .col-lg-push-10 {
+        left: 83.33333333%
+    }
+
+    .col-lg-push-11 {
+        left: 91.66666667%
+    }
+
+    .col-lg-push-12 {
+        left: 100%
+    }
+
+    .col-lg-offset-0 {
+        margin-left: 0%
+    }
+
+    .col-lg-offset-1 {
+        margin-left: 8.33333333%
+    }
+
+    .col-lg-offset-2 {
+        margin-left: 16.66666667%
+    }
+
+    .col-lg-offset-3 {
+        margin-left: 25%
+    }
+
+    .col-lg-offset-4 {
+        margin-left: 33.33333333%
+    }
+
+    .col-lg-offset-5 {
+        margin-left: 41.66666667%
+    }
+
+    .col-lg-offset-6 {
+        margin-left: 50%
+    }
+
+    .col-lg-offset-7 {
+        margin-left: 58.33333333%
+    }
+
+    .col-lg-offset-8 {
+        margin-left: 66.66666667%
+    }
+
+    .col-lg-offset-9 {
+        margin-left: 75%
+    }
+
+    .col-lg-offset-10 {
+        margin-left: 83.33333333%
+    }
+
+    .col-lg-offset-11 {
+        margin-left: 91.66666667%
+    }
+
+    .col-lg-offset-12 {
+        margin-left: 100%
+    }
+}
+
 @media(min-width:992px) {
     .twenty-four-cols .col-md-1 {
         width: 4.166666666666666666666666666666%;
@@ -99,22 +944,283 @@ body {
     transition: all .5s
 }
 
-.posters .poster img {
-    width: 100%
-}
-
-.posters .grid-item {
-    padding-left: 0;
-    padding-right: 0
-}
-
-    .posters .grid-item:nth-child(even) .poster, .posters .grid-item:nth-child(even) .quick-icons {
-        border-left: solid 1px #2d2d2d !important;
-        margin-left: -1px
+    .posters .rank-wrapper .rank, .fanarts .rank-wrapper .rank {
+        background-color: #333;
+        color: #fff;
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        border: solid 2px #fff;
+        border-radius: 11px;
+        height: 22px;
+        min-width: 22px;
+        line-height: 1.6;
+        padding: 0 5px;
+        text-align: center
     }
 
-    .posters .grid-item .poster, .posters .grid-item .quick-icons {
-        border: 0 !important
+.posters {
+    margin-bottom: 20px
+}
+
+    .posters.no-top {
+        margin-top: -20px
+    }
+
+    .posters .list-edit {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-image: -webkit-linear-gradient(top,rgba(0,0,0,0) 25%,rgba(0,0,0,0.9) 100%);
+        background-image: -o-linear-gradient(top,rgba(0,0,0,0) 25%,rgba(0,0,0,0.9) 100%);
+        background-image: linear-gradient(to bottom,rgba(0,0,0,0) 25%,rgba(0,0,0,0.9) 100%);
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000',endColorstr='#E6000000',GradientType=0);
+        z-index: 1;
+        color: #fff;
+        text-align: center;
+        top: 100%;
+        transition: all .25s
+    }
+
+        .posters .list-edit .icons {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            bottom: 15px;
+            left: 0;
+            font-size: 20px
+        }
+
+            .posters .list-edit .icons > div {
+                vertical-align: middle
+            }
+
+                .posters .list-edit .icons > div:not(:first-child) {
+                    margin-left: 12px
+                }
+
+            .posters .list-edit .icons :not(.drag) {
+                cursor: pointer
+            }
+
+            .posters .list-edit .icons .drag {
+                font-size: 18px
+            }
+
+    .posters .poster {
+        border: solid 1px #eee;
+        border-bottom: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .posters .poster .collection-metadata {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 2;
+            color: #fff;
+            background-color: rgba(0,0,0,.7);
+            text-align: center;
+            padding-top: 6px;
+            opacity: 0;
+            transition: all .5s
+        }
+
+            .posters .poster .collection-metadata .video, .posters .poster .collection-metadata .audio {
+                position: absolute;
+                width: 80%;
+                left: 10%
+            }
+
+            .posters .poster .collection-metadata .video {
+                bottom: 50%;
+                border-bottom: solid 1px #666;
+                padding-bottom: 10px
+            }
+
+            .posters .poster .collection-metadata .audio {
+                top: 50%;
+                padding-top: 15px
+            }
+
+            .posters .poster .collection-metadata span {
+                margin: 0 3px 6px;
+                vertical-align: middle;
+                display: inline-block;
+                font-size: 24px
+            }
+
+                .posters .poster .collection-metadata span.tag {
+                    margin-bottom: 0;
+                    font-family: proxima nova semibold;
+                    font-size: 14px;
+                    color: #eee
+                }
+
+                    .posters .poster .collection-metadata span.tag.strong {
+                        font-family: proxima nova bold
+                    }
+
+                .posters .poster .collection-metadata span.logos-icon-bluray, .posters .poster .collection-metadata span.logos-icon-vcd {
+                    font-size: 30px
+                }
+
+                .posters .poster .collection-metadata span.logos-icon-digital {
+                    font-size: 20px
+                }
+
+                .posters .poster .collection-metadata span.logos-icon-dolby_digital, .posters .poster .collection-metadata span.logos-icon-dolby_digital_plus, .posters .poster .collection-metadata span.logos-icon-dolby_prologic, .posters .poster .collection-metadata span.logos-icon-dolby_atmos, .posters .poster .collection-metadata span.logos-icon-dolby_truehd, .posters .poster .collection-metadata span.logos-icon-dts, .posters .poster .collection-metadata span.logos-icon-dts_ma, .posters .poster .collection-metadata span.logos-icon-dts_x {
+                    font-size: 20px
+                }
+
+        .posters .poster:hover .collection-metadata {
+            opacity: 1
+        }
+
+        .posters .poster img {
+            width: 100%
+        }
+
+        .posters .poster .real {
+            min-height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0
+        }
+
+        .posters .poster .quad {
+            height: 50%;
+            width: 50%;
+            min-height: 50%
+        }
+
+            .posters .poster .quad:nth-child(3) {
+                left: 50%
+            }
+
+            .posters .poster .quad:nth-child(4) {
+                top: 50%
+            }
+
+            .posters .poster .quad:nth-child(5) {
+                top: 50%;
+                left: 50%
+            }
+
+        .posters .poster h4 {
+            background-color: #ed1c24;
+            color: #fff;
+            font-size: 11px;
+            display: inline-block;
+            padding: 3px 5px;
+            margin: 0 0 5px;
+            font-family: proxima nova semibold;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+            .posters .poster h4.premiere {
+                background-color: #08a508
+            }
+
+    .posters > div {
+        margin-top: 20px
+    }
+
+        .posters > div.no-top {
+            margin-top: 0
+        }
+
+        .posters > div .quick-icons {
+            border: solid 1px #eee;
+            border-top: 0
+        }
+
+        .posters > div .titles {
+            margin: 0 0 5px
+        }
+
+        .posters > div h3, .posters > div h4 {
+            text-align: center;
+            margin: 0;
+            padding: 0
+        }
+
+        .posters > div h3 {
+            font-size: 16px;
+            margin-top: 10px;
+            overflow: hidden;
+            height: 18px;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+            .posters > div h3 .main-title-abs {
+                font-family: proxima nova bold
+            }
+
+            .posters > div h3 .main-title-sxe {
+                font-family: proxima nova bold
+            }
+
+        .posters > div h4 {
+            font-size: 12px;
+            margin-top: 5px;
+            overflow: hidden;
+            height: 13px;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+    .posters .user h4 .fa {
+        margin: 0 3px 0 0
+    }
+
+        .posters .user h4 .fa.gender {
+            margin-left: 7px
+        }
+
+    .posters .avatar-grid-item .poster {
+        text-align: center;
+        background: url(/assets/users/bg-388ebd4e59030af56fcac6b9ec383ee6.jpg) center center;
+        background-size: cover
+    }
+
+        .posters .avatar-grid-item .poster img.base {
+            opacity: 0
+        }
+
+        .posters .avatar-grid-item .poster img.real {
+            width: 70%;
+            height: auto;
+            min-height: auto;
+            left: 50%;
+            margin-left: -35%;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            background-color: #fff;
+            position: absolute;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            white-space: nowrap
+        }
+
+    .posters .avatar-grid-item .quick-icons {
+        display: none
     }
 
 @media(max-width:767px) {
@@ -343,7 +1449,7 @@ body {
     .fanarts .fanart {
         background-color: #1d1d1d;
         position: relative;
-        overflow: hidden
+        overflow: hidden;
     }
 
         .fanarts .fanart img {
@@ -547,6 +1653,35 @@ body {
     .fanarts .no-border .quick-icons {
         border: 0
     }
+
+@media(max-width:991px) {
+    .frame-wrapper .frame .fanarts:before, .frame-wrapper .frame .fanarts:after {
+        content: " ";
+        display: table
+    }
+
+    .frame-wrapper .frame .fanarts:after {
+        clear: both
+    }
+}
+
+@media(min-width:768px) and (max-width:991px) {
+    #ondeck-wrapper .grid-item:nth-child(5), #ondeck-wrapper .grid-item:nth-child(6), #recommendations-wrapper .grid-item:nth-child(5), #recommendations-wrapper .grid-item:nth-child(6) {
+        display: none
+    }
+
+    body.dashboard #recommendations-wrapper .posters .grid-item:nth-child(3), body.dashboard #recommendations-wrapper .fanarts .grid-item:nth-child(3) {
+        display: none
+    }
+
+    #recently-watched-wrapper .grid-item:nth-child(3) {
+        display: none
+    }
+
+    .hero-wrapper.vip h2 {
+        font-size: 15px !important
+    }
+}
 
 .poster .loading, .fanart .loading, .btn-summary .loading {
     width: 100%;

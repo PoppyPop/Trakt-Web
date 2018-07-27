@@ -1,7 +1,8 @@
  <div class="row posters fanarts twenty-four-cols grid-item no-overlays">
-        <div class="col-md-3 hidden-xs hidden-sm">
+        <div id="show-wait-poster-{{ id }}" class="col-md-3 hidden-xs hidden-sm">
             <div class="poster">
-                <img id="show-poster-{{ id }}" src="{{ posterUrl }}" alt="Poster">
+                <img class="base" src="/images/posters.png" alt="Fanart">
+                <img class="real" id="show-poster-{{ id }}" src="{{ posterUrl }}" alt="Poster" style="display: block;">
             </div>
         </div>
         <div class="col-md-15 col-sm-8 main-info">
@@ -59,9 +60,10 @@
             </div>
         </div>
         {{#if nextEpisodeToCollect}}
-        <div class="grid-item col-md-6 col-sm-4 no-border">
+        <div id="show-wait-fanart-{{ id }}" class="grid-item col-md-6 col-sm-4 no-border">
             <div class="fanart">
-                <img id="show-collect-poster-{{ id }}" class="base" src="{{nextEpisodeToCollect.posterUrl}}" alt="Fanart">
+                <img class="base" src="/images/episodes.png" alt="Fanart">
+                <img id="show-collect-poster-{{ id }}" class="real" src="{{nextEpisodeToCollect.posterUrl}}" alt="Fanart" style="display: block;">
                 <div class="loading">
                     <div class="icon">
                         <div class="fa fa-refresh fa-spin"></div>
@@ -69,10 +71,12 @@
                 </div>
                 <div class="shadow-base"></div>
                 <div class="titles">
-                    <h4><span class="convert-date">{{nextEpisodeToCollect.airDate}}</span></h4>
-                    <h3><span class="main-title-sxe">
-    {{nextEpisodeToCollect.seasonNumber}}x{{formatNumber nextEpisodeToCollect.episodeNumber useGrouping=false minimumIntegerDigits=2 }}
-</span> <span class="main-title">{{truncate nextEpisodeToCollect.name}}</span></h3>
+                    <h4><span class="convert-date" id="show-collect-date-{{ id }}">{{nextEpisodeToCollect.airDate}}</span></h4>
+                    <h3>
+                        <span class="main-title-sxe">
+                            {{nextEpisodeToCollect.seasonNumber}}x{{formatNumber nextEpisodeToCollect.episodeNumber useGrouping=false minimumIntegerDigits=2 }}
+                        </span> <span class="main-title" id="show-collect-name-{{ id }}">{{truncate nextEpisodeToCollect.name}}</span>
+                    </h3>
                 </div>
             </div>
         </div>
