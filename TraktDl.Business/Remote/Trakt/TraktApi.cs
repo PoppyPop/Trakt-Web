@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using TraktApiSharp;
 using TraktApiSharp.Enums;
 using TraktApiSharp.Objects.Authentication;
@@ -45,7 +44,9 @@ namespace TraktDl.Business.Remote.Trakt
             TraktClient client = TraktApiClient.Client;
 
             if (!client.IsValidForAuthenticationProcess)
+            {
                 throw new InvalidOperationException("Trakt Client not valid for authentication");
+            }
 
             client.Configuration.ForceAuthorization = true;
 
@@ -56,8 +57,8 @@ namespace TraktDl.Business.Remote.Trakt
         {
             if (IsUsable)
             {
-                var token = GetAuthToken();
-                var authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
+                TraktToken token = GetAuthToken();
+                TraktAuthorization authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
                 Client.Authorization = authorization;
 
                 RefreshAuthorization().Wait();
@@ -98,7 +99,7 @@ namespace TraktDl.Business.Remote.Trakt
 
         private TraktToken GetAuthToken()
         {
-            var key = Database.GetApiKey(ApiKeyName);
+            ApiKeySql key = Database.GetApiKey(ApiKeyName);
 
             if (key != null)
             {
@@ -144,8 +145,8 @@ namespace TraktDl.Business.Remote.Trakt
 
         private void RefreshHiddenItem()
         {
-            var showRefresh = RefreshShowHiddenItem();
-            var seasonRefresh = RefreshSeasonHiddenItem();
+            Task<List<ShowSql>> showRefresh = RefreshShowHiddenItem();
+            Task<List<ShowSql>> seasonRefresh = RefreshSeasonHiddenItem();
 
             Task.WaitAll(showRefresh, seasonRefresh);
 
@@ -155,7 +156,7 @@ namespace TraktDl.Business.Remote.Trakt
         private async Task<List<ShowSql>> RefreshShowHiddenItem()
         {
             List<ShowSql> res = new List<ShowSql>();
-            var hiddenShow = await Client.Users
+            TraktPagedResponse<ITraktUserHiddenItem> hiddenShow = await Client.Users
                 .GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Show)
                 .ConfigureAwait(false);
 
@@ -163,7 +164,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenShowRes)
             {
-                var localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
+                ShowSql localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
 
                 localShow.Update(traktUserHiddenItem);
 
@@ -176,15 +177,15 @@ namespace TraktDl.Business.Remote.Trakt
         private async Task<List<ShowSql>> RefreshSeasonHiddenItem()
         {
             List<ShowSql> res = new List<ShowSql>();
-            var hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
+            TraktPagedResponse<ITraktUserHiddenItem> hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
 
             TraktPagedResponse<ITraktUserHiddenItem> hiddenSeasonRes = hiddenSeason;
 
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenSeasonRes)
             {
-                var localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
+                ShowSql localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
 
-                var localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
+                SeasonSql localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
 
                 localSeason.Update(traktUserHiddenItem);
 
@@ -275,8 +276,8 @@ namespace TraktDl.Business.Remote.Trakt
             // Set all missing to unknown
             Database.ClearMissingEpisodes();
 
-            var collected = Client.Users.GetCollectionShowsAsync("me", new TraktExtendedInfo { Full = true });
-            var watched = Client.Users.GetWatchedShowsAsync("me", new TraktExtendedInfo { Full = true });
+            Task<TraktListResponse<ITraktCollectionShow>> collected = Client.Users.GetCollectionShowsAsync("me", new TraktExtendedInfo { Full = true });
+            Task<TraktListResponse<ITraktWatchedShow>> watched = Client.Users.GetWatchedShowsAsync("me", new TraktExtendedInfo { Full = true });
 
             List<TraktShow> shows = new List<TraktShow>();
 
@@ -285,9 +286,9 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (ITraktWatchedShow traktWatchedShow in watchedRes)
             {
-                int watchedEpisodes = traktWatchedShow.WatchedSeasons.Sum(season => season.Episodes.Count());
+                int watchedEpisodes = traktWatchedShow.WatchedSeasons.Where(s => s.Number != 0).Sum(season => season.Episodes.Count());
 
-                var show = new TraktShow
+                TraktShow show = new TraktShow
                 {
                     Id = traktWatchedShow.Ids.Trakt,
                     Year = traktWatchedShow.Year,
@@ -300,7 +301,7 @@ namespace TraktDl.Business.Remote.Trakt
 
                 foreach (ITraktWatchedShowSeason season in traktWatchedShow.WatchedSeasons)
                 {
-                    var traktSeason = new TraktSeason { Season = season.Number.Value };
+                    TraktSeason traktSeason = new TraktSeason { Season = season.Number.Value };
 
                     foreach (ITraktWatchedShowEpisode episode in season.Episodes)
                     {
@@ -318,7 +319,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (ITraktCollectionShow traktCollectionShow in collectedRes)
             {
-                var show = shows.SingleOrDefault(s => s.Id == traktCollectionShow.Ids.Trakt);
+                TraktShow show = shows.SingleOrDefault(s => s.Id == traktCollectionShow.Ids.Trakt);
                 if (show == null)
                 {
                     show = new TraktShow
@@ -336,7 +337,7 @@ namespace TraktDl.Business.Remote.Trakt
 
                 foreach (ITraktCollectionShowSeason season in traktCollectionShow.CollectionSeasons)
                 {
-                    var misSeason = show.Seasons.SingleOrDefault(e => e.Season == season.Number);
+                    TraktSeason misSeason = show.Seasons.SingleOrDefault(e => e.Season == season.Number);
                     if (misSeason == null)
                     {
                         misSeason = new TraktSeason { Season = season.Number.Value };
@@ -345,7 +346,7 @@ namespace TraktDl.Business.Remote.Trakt
 
                     foreach (ITraktCollectionShowEpisode episode in season.Episodes)
                     {
-                        var misEpisode = misSeason.MissingEpisodes.SingleOrDefault(e => e.Episode == episode.Number);
+                        TraktEpisode misEpisode = misSeason.MissingEpisodes.SingleOrDefault(e => e.Episode == episode.Number);
                         if (misEpisode != null)
                         {
                             misEpisode.Collected = true;
@@ -361,7 +362,7 @@ namespace TraktDl.Business.Remote.Trakt
             shows.RemoveAll(s => s.Watched);
 
             // PrepareDB 
-            var bddShows = Database.GetShows();
+            List<ShowSql> bddShows = Database.GetShows();
             List<ShowSql> updateShows = new List<ShowSql>();
 
             // Remove Show blacklist
@@ -370,7 +371,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (TraktShow traktShow in shows)
             {
-                var localShow = GetShow(traktShow.Id);
+                ShowSql localShow = GetShow(traktShow.Id);
                 localShow.Update(traktShow);
                 updateShows.Add(localShow);
                 tasks.Add(HandleProgress(traktShow, localShow));
@@ -394,14 +395,14 @@ namespace TraktDl.Business.Remote.Trakt
 
             if (traktShow.Seasons.Any())
             {
-                var collectionProgress =
+                TraktResponse<TraktApiSharp.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgress =
                     await Client.Shows.GetShowCollectionProgressAsync(traktShow.Id.ToString(), false, false, false).ConfigureAwait(false);
 
-                var collectionProgressRes = collectionProgress;
+                TraktResponse<TraktApiSharp.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgressRes = collectionProgress;
 
                 foreach (ITraktSeasonCollectionProgress season in collectionProgressRes.Value.Seasons)
                 {
-                    var misSeason = traktShow.Seasons.SingleOrDefault(e => e.Season == season.Number);
+                    TraktSeason misSeason = traktShow.Seasons.SingleOrDefault(e => e.Season == season.Number);
                     if (misSeason == null)
                     {
                         misSeason = new TraktSeason { Season = season.Number.Value };
@@ -418,9 +419,9 @@ namespace TraktDl.Business.Remote.Trakt
                     }
                 }
 
-                foreach (var showSeason in traktShow.Seasons)
+                foreach (TraktSeason showSeason in traktShow.Seasons)
                 {
-                    var season = GetSeason(bddShow, showSeason.Season);
+                    SeasonSql season = GetSeason(bddShow, showSeason.Season);
 
                     // BlackList Ended series if complete
                     if ((traktShow.Status == TraktShowStatus.Ended || traktShow.Status == TraktShowStatus.Canceled) && !showSeason.MissingEpisodes.Any())
@@ -433,7 +434,7 @@ namespace TraktDl.Business.Remote.Trakt
                         // Save missing episode
                         foreach (TraktEpisode missingEpisode in showSeason.MissingEpisodes)
                         {
-                            var ep = GetEpisode(season, missingEpisode.Episode);
+                            EpisodeSql ep = GetEpisode(season, missingEpisode.Episode);
                             ep.Status = missingEpisode.Collected || missingEpisode.Watched ? EpisodeStatusSql.Collected : EpisodeStatusSql.Missing;
                         }
                     }

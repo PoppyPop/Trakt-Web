@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TraktApiSharp.Enums;
 using TraktApiSharp.Objects.Get.Users;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
@@ -12,6 +13,17 @@ namespace TraktDl.Business.Remote.Trakt
         public static void Update(this ShowSql showBdd, ITraktUserHiddenItem item)
         {
             showBdd.Blacklisted = true;
+
+            if (item.Type == TraktHiddenItemType.Show)
+            { 
+            showBdd.Name = item.Show.Title;
+            showBdd.Year = item.Show.Year;
+            }
+            else if (item.Type == TraktHiddenItemType.Movie)
+            {
+                showBdd.Name = item.Movie.Title;
+                showBdd.Year = item.Movie.Year;
+            }
 
             var show = item.Show;
 
