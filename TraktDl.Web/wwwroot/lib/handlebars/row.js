@@ -1,6 +1,10 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['row'] = template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.haveMissingEpisodes : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
   return "                    <div class=\"grid-item\" data-season-id=\""
@@ -28,21 +32,21 @@ templates['row'] = template({"1":function(container,depth0,helpers,partials,data
     + "%</div>\r\n                        </div>\r\n                        <div class=\"row collapse\" id=\"season-"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\">\r\n                            <div class=\"col-sm-11 col-xs-12\">\r\n                                <div class=\"episodes\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.episodes : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.episodes : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n";
-},"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
   return "                                    <div class=\"episode "
     + alias3((helpers["episode-status"] || (depth0 && depth0["episode-status"]) || alias2).call(alias1,(depth0 != null ? depth0.status : depth0),{"name":"episode-status","hash":{},"data":data}))
     + "\" data-episode-id=\""
     + alias3(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\"><a href=\"#\">\r\n    "
+    + "\">\r\n                                        <a href=\"#\">\r\n                                            "
     + alias3(container.lambda((depths[1] != null ? depths[1].seasonNumber : depths[1]), depth0))
     + "x"
     + alias3((helpers.formatNumber || (depth0 && depth0.formatNumber) || alias2).call(alias1,(depth0 != null ? depth0.episodeNumber : depth0),{"name":"formatNumber","hash":{"minimumIntegerDigits":2,"useGrouping":false},"data":data}))
-    + "</a></div>\r\n";
-},"4":function(container,depth0,helpers,partials,data) {
+    + "\r\n                                        </a>\r\n                                    </div>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=container.lambda;
 
   return "        <div id=\"show-wait-fanart-"
@@ -96,7 +100,7 @@ templates['row'] = template({"1":function(container,depth0,helpers,partials,data
     + "\" style=\"\">\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.seasons : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                </div>\r\n            </div>\r\n        </div>\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.nextEpisodeToCollect : depth0),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.nextEpisodeToCollect : depth0),{"name":"if","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "    </div>";
 },"useData":true,"useDepths":true});
 })();

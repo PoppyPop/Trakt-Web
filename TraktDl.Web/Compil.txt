@@ -1,0 +1,7 @@
+install npm
+
+npm install handlebars -g
+
+cd C:\Users\skyte\Documents\Git\Trakt-Web\TraktDl.Web\wwwroot\lib\handlebars
+
+handlebars row.handlebars -f row.js
