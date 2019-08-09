@@ -22,6 +22,8 @@ namespace TraktDl.Business.Shared.Remote
 
         public int MissingEpisodes => Episodes.Count(e => e.Status == EpisodeStatus.Missing);
 
+        public bool HaveMissingEpisodes => MissingEpisodes > 0;
+
         public Episode NextEpisodeToCollect => Episodes.OrderBy(s => s.EpisodeNumber).FirstOrDefault(s => s.Status == EpisodeStatus.Missing);
 
         public Season()
