@@ -11,7 +11,7 @@ namespace TraktDl.Business.Remote.Tmdb
     {
         public static void Update(this ShowSql showBdd, TMDbConfig config, TvShow item)
         {
-            showBdd.PosterUrl = config.Images.BaseUrl + "w500" + item.PosterPath;
+            showBdd.PosterUrl = config.Images.SecureBaseUrl + "w500" + item.PosterPath;
 
             if (item.ExternalIds != null)
                 showBdd.Providers[ProviderSql.Imdb] = item.ExternalIds.ImdbId;
@@ -19,7 +19,7 @@ namespace TraktDl.Business.Remote.Tmdb
 
         public static void Update(this EpisodeSql episodeBdd, TMDbConfig config, TvEpisode item)
         {
-            episodeBdd.PosterUrl = config.Images.BaseUrl + "w300" + item.StillPath;
+            episodeBdd.PosterUrl = config.Images.SecureBaseUrl + "w300" + item.StillPath;
             episodeBdd.Name = item.Name;
             episodeBdd.AirDate = item.AirDate;
 
