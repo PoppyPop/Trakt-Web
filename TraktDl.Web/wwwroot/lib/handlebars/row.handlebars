@@ -23,6 +23,7 @@
             <div class="seasons">
                 <div class="collapse in" id="show-{{ id }}" style="">
                     {{#each seasons}}
+                    {{#if missingEpisodes}}
                     <div class="grid-item" data-season-id="{{ id }}">
                         <div class="info">
                             <div class="row">
@@ -48,13 +49,17 @@
                             <div class="col-sm-11 col-xs-12">
                                 <div class="episodes">
                                     {{#each episodes}}
-                                    <div class="episode {{episode-status status}}" data-episode-id="{{ id }}"><a href="#">
-    {{ ../seasonNumber }}x{{formatNumber episodeNumber useGrouping=false minimumIntegerDigits=2 }}</a></div>
+                                    <div class="episode {{episode-status status}}" data-episode-id="{{ id }}">
+                                        <a href="#">
+                                            {{ ../seasonNumber }}x{{formatNumber episodeNumber useGrouping=false minimumIntegerDigits=2 }}
+                                        </a>
+                                    </div>
                                     {{/each}}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/if}}
                     {{/each}}
                 </div>
             </div>
