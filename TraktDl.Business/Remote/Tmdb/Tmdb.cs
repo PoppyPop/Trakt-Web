@@ -26,7 +26,7 @@ namespace TraktDl.Business.Remote.Tmdb
             if (IsUsable)
             {
                 var token = GetAuthToken();
-                TMDbClient client = new TMDbClient(token);
+                TMDbClient client = new TMDbClient(token, useSsl: true);
 
                 client.GetConfigAsync().Wait();
 
