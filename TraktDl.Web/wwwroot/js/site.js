@@ -129,8 +129,8 @@ function getData() {
         type: 'GET',
         url: uri + '/missings',
         success: function (data) {
+            $('#refreshButton').removeClass("fa-spin");
             $.each(data, function (key, item) {
-                $('#refreshButton').removeClass("fa-spin");
                 $('#progress-wrapper').append(Handlebars.templates.row(item));
 
                 if (!item.posterUrl || (item.nextEpisodeToCollect && !item.nextEpisodeToCollect.posterUrl)) {

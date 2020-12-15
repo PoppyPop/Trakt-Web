@@ -146,11 +146,14 @@ namespace TraktDl.Business.Remote.Trakt
         private void RefreshHiddenItem()
         {
             Task<List<ShowSql>> showRefresh = RefreshShowHiddenItem();
-            Task<List<ShowSql>> seasonRefresh = RefreshSeasonHiddenItem();
+            showRefresh.Wait();
 
-            Task.WaitAll(showRefresh, seasonRefresh);
+            Database.AddOrUpdateShows(showRefresh.Result);
 
-            Database.AddOrUpdateShows(showRefresh.Result.Concat(seasonRefresh.Result).ToList());
+            Task<List<ShowSql>> seasonRefresh = RefreshSeasonHiddenItem(showRefresh.Result);
+            seasonRefresh.Wait();
+
+            Database.AddOrUpdateShows(seasonRefresh.Result);
         }
 
         private async Task<List<ShowSql>> RefreshShowHiddenItem()
@@ -174,25 +177,25 @@ namespace TraktDl.Business.Remote.Trakt
             return res;
         }
 
-        private async Task<List<ShowSql>> RefreshSeasonHiddenItem()
+        private async Task<List<ShowSql>> RefreshSeasonHiddenItem(List<ShowSql> shows)
         {
-            List<ShowSql> res = new List<ShowSql>();
+            Dictionary<uint, ShowSql> res = shows.ToDictionary(s => s.Id);
             TraktPagedResponse<ITraktUserHiddenItem> hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
 
             TraktPagedResponse<ITraktUserHiddenItem> hiddenSeasonRes = hiddenSeason;
 
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenSeasonRes)
             {
-                ShowSql localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
+                ShowSql localShow = res.ContainsKey(traktUserHiddenItem.Show.Ids.Trakt) ? res[traktUserHiddenItem.Show.Ids.Trakt] : GetShow(traktUserHiddenItem.Show.Ids.Trakt);
 
                 SeasonSql localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
 
                 localSeason.Update(traktUserHiddenItem);
 
-                res.Add(localShow);
+                res[localShow.Id] = localShow;
             }
 
-            return res;
+            return res.Values.ToList();
         }
 
         //private readonly object _getShowLock = new object();
