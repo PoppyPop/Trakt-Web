@@ -1,4 +1,4 @@
-﻿using TraktApiSharp;
+﻿using TraktNet;
 
 namespace TraktDl.Business.Remote.Trakt
 {

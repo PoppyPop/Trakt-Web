@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using TraktApiSharp.Enums;
-using TraktDl.Business.Shared.Remote;
+using TraktNet.Enums;
 
 namespace TraktDl.Business.Remote.Trakt
 {

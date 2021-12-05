@@ -1,6 +1,5 @@
 ﻿using TMDbLib.Objects.General;
 using TMDbLib.Objects.TvShows;
-using TraktApiSharp.Objects.Get.Users;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Remote.Trakt;
 using TraktDl.Business.Shared.Database;

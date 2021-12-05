@@ -3,19 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TraktApiSharp;
-using TraktApiSharp.Enums;
-using TraktApiSharp.Objects.Authentication;
-using TraktApiSharp.Objects.Get.Collections;
-using TraktApiSharp.Objects.Get.Episodes;
-using TraktApiSharp.Objects.Get.Seasons;
-using TraktApiSharp.Objects.Get.Users;
-using TraktApiSharp.Objects.Get.Watched;
-using TraktApiSharp.Requests.Parameters;
-using TraktApiSharp.Responses;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
+using TraktNet;
+using TraktNet.Enums;
+using TraktNet.Objects.Authentication;
+using TraktNet.Objects.Get.Collections;
+using TraktNet.Objects.Get.Episodes;
+using TraktNet.Objects.Get.Seasons;
+using TraktNet.Objects.Get.Users;
+using TraktNet.Objects.Get.Watched;
+using TraktNet.Requests.Parameters;
+using TraktNet.Responses;
 
 namespace TraktDl.Business.Remote.Trakt
 {
@@ -55,7 +55,7 @@ namespace TraktDl.Business.Remote.Trakt
             if (IsUsable(database))
             {
                 TraktToken token = GetAuthToken(database);
-                TraktAuthorization authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
+                ITraktAuthorization authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
                 Client.Authorization = authorization;
 
                 RefreshAuthorization(database).Wait();
@@ -398,10 +398,10 @@ namespace TraktDl.Business.Remote.Trakt
 
             if (traktShow.Seasons.Any())
             {
-                TraktResponse<TraktApiSharp.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgress =
+                TraktResponse<TraktNet.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgress =
                     await Client.Shows.GetShowCollectionProgressAsync(traktShow.Id.ToString(), false, false, false).ConfigureAwait(false);
 
-                TraktResponse<TraktApiSharp.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgressRes = collectionProgress;
+                TraktResponse<TraktNet.Objects.Get.Shows.ITraktShowCollectionProgress> collectionProgressRes = collectionProgress;
 
                 foreach (ITraktSeasonCollectionProgress season in collectionProgressRes.Value.Seasons)
                 {

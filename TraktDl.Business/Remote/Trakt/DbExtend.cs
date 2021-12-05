@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TraktApiSharp.Enums;
-using TraktApiSharp.Objects.Get.Users;
 using TraktDl.Business.Database.SqLite;
 using TraktDl.Business.Shared.Database;
+using TraktNet.Enums;
+using TraktNet.Objects.Get.Users;
 
 namespace TraktDl.Business.Remote.Trakt
 {

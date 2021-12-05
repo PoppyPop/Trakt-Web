@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -9,13 +9,13 @@
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
-    <PackageReference Include="NHibernate" Version="5.3.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageReference Include="NHibernate" Version="5.3.10" />
     <PackageReference Include="NHibernate.Mapping.Attributes" Version="5.1.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
     <PackageReference Include="TMDbLib" Version="1.8.1" />
-    <PackageReference Include="TraktApiSharp" Version="1.0.0-alpha3" />
+    <PackageReference Include="Trakt.NET" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
