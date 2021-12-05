@@ -23,7 +23,7 @@ namespace TraktDl.Business.Database.SqLite
         public void OpenTransaction()
         {
             session = sessionFactory.OpenSession();
-            transaction = session.BeginTransaction();
+            //transaction = session.BeginTransaction();
         }
 
         public void Commit()
@@ -156,19 +156,18 @@ namespace TraktDl.Business.Database.SqLite
             return true;
         }
 
+#if DEBUG
         private static string DbFile = "TrakDL.db";
+#else
+        private static string DbFile = "/datas/TrakDL.db";
+#endif
 
         private static ISessionFactory CreateSessionFactory()
         {
-            var dataSource = DbFile;
-#if !DEBUG
-            dataSource = $"/datas/{DbFile}";
-#endif
-
             return Fluently.Configure()
                 .Database(
                     SQLiteConfiguration.Standard
-                        .UsingFile(dataSource)
+                        .UsingFile(DbFile)
                         .ShowSql()
                 )
                 .Mappings(m =>
