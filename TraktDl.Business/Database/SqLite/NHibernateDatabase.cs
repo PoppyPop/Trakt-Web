@@ -23,7 +23,7 @@ namespace TraktDl.Business.Database.SqLite
         public void OpenTransaction()
         {
             session = sessionFactory.OpenSession();
-            // transaction = session.BeginTransaction();
+            transaction = session.BeginTransaction();
         }
 
         public void Commit()
