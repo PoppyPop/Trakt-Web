@@ -329,3 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /TraktDl.Web/AutoDl.db
+/TraktDl.Web/TrakDL.db
+
