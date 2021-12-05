@@ -25,16 +25,13 @@ namespace TraktDl.Business.Remote.Trakt
 
         private ITraktApiClient TraktApiClient { get; }
 
-        private IDatabase Database { get; }
-
         private TraktClient Client { get; set; }
 
         private string ApiKeyName => TraktApiClient.GetMode == ApiMode.Sandbox ? "Trakt.Sandbox" : "Trakt";
 
-        public TraktApi(ITraktApiClient client, IDatabase database)
+        public TraktApi(ITraktApiClient client)
         {
             TraktApiClient = client;
-            Database = database;
 
             Client = GetClient();
         }
@@ -53,15 +50,15 @@ namespace TraktDl.Business.Remote.Trakt
             return client;
         }
 
-        private void SetupClient()
+        private void SetupClient(IDatabase database)
         {
-            if (IsUsable)
+            if (IsUsable(database))
             {
-                TraktToken token = GetAuthToken();
+                TraktToken token = GetAuthToken(database);
                 TraktAuthorization authorization = TraktAuthorization.CreateWith(token.AccessToken, token.RefreshToken);
                 Client.Authorization = authorization;
 
-                RefreshAuthorization().Wait();
+                RefreshAuthorization(database).Wait();
             }
             else
             {
@@ -69,37 +66,37 @@ namespace TraktDl.Business.Remote.Trakt
             }
         }
 
-        private async Task TryToDeviceAuthenticate()
+        private async Task TryToDeviceAuthenticate(IDatabase database)
         {
             TraktResponse<ITraktAuthorization> authorization = await Client.Authentication.PollForAuthorizationAsync();
 
             if (authorization.HasValue && authorization.Value.IsValid)
             {
-                SaveAuthToken(new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
+                SaveAuthToken(database, new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
 
                 Console.WriteLine("-------------- Authentication successful --------------");
             }
         }
 
-        private async Task RefreshAuthorization()
+        private async Task RefreshAuthorization(IDatabase database)
         {
             TraktResponse<ITraktAuthorization> newAuthorization = await Client.Authentication.RefreshAuthorizationAsync();
 
             if (newAuthorization.HasValue && newAuthorization.Value.IsValid)
             {
-                SaveAuthToken(new TraktToken { AccessToken = newAuthorization.Value.AccessToken, RefreshToken = newAuthorization.Value.RefreshToken });
+                SaveAuthToken(database, new TraktToken { AccessToken = newAuthorization.Value.AccessToken, RefreshToken = newAuthorization.Value.RefreshToken });
                 Console.WriteLine("-------------- Authorization refreshed successfully --------------");
             }
         }
 
-        private void SaveAuthToken(TraktToken token)
+        private void SaveAuthToken(IDatabase database, TraktToken token)
         {
-            Database.AddApiKey(new ApiKeySql { Id = ApiKeyName, ApiData = JsonConvert.SerializeObject(token) });
+            database.AddApiKey(new ApiKeySql { Id = ApiKeyName, ApiData = JsonConvert.SerializeObject(token) });
         }
 
-        private TraktToken GetAuthToken()
+        private TraktToken GetAuthToken(IDatabase database)
         {
-            ApiKeySql key = Database.GetApiKey(ApiKeyName);
+            ApiKeySql key = database.GetApiKey(ApiKeyName);
 
             if (key != null)
             {
@@ -109,9 +106,9 @@ namespace TraktDl.Business.Remote.Trakt
             return null;
         }
 
-        public bool IsUsable => GetAuthToken() != null;
+        public bool IsUsable(IDatabase database) => GetAuthToken(database) != null;
 
-        public async Task<DeviceToken> GetDeviceToken()
+        public async Task<DeviceToken> GetDeviceToken(IDatabase database)
         {
             TraktResponse<ITraktDevice> device = await Client.Authentication.GenerateDeviceAsync().ConfigureAwait(false);
 
@@ -121,7 +118,7 @@ namespace TraktDl.Business.Remote.Trakt
                 Console.WriteLine($"Please visit the following webpage: {device.Value.VerificationUrl}");
                 Console.WriteLine($"Sign in or sign up on that webpage and enter the following code: {device.Value.UserCode}");
 
-                await TryToDeviceAuthenticate();
+                await TryToDeviceAuthenticate(database);
 
                 return new DeviceToken { Token = device.Value.UserCode, Url = device.Value.VerificationUrl };
             }
@@ -129,13 +126,13 @@ namespace TraktDl.Business.Remote.Trakt
             return null;
         }
 
-        public async Task<bool> CheckAuthent(string deviceToken)
+        public async Task<bool> CheckAuthent(IDatabase database, string deviceToken)
         {
             TraktResponse<ITraktAuthorization> authorization = await Client.Authentication.GetAuthorizationAsync(deviceToken);
 
             if (authorization.HasValue && authorization.Value.IsValid)
             {
-                SaveAuthToken(new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
+                SaveAuthToken(database, new TraktToken { AccessToken = authorization.Value.AccessToken, RefreshToken = authorization.Value.RefreshToken });
 
                 return true;
             }
@@ -143,20 +140,20 @@ namespace TraktDl.Business.Remote.Trakt
             return false;
         }
 
-        private void RefreshHiddenItem()
+        private void RefreshHiddenItem(IDatabase database)
         {
-            Task<List<ShowSql>> showRefresh = RefreshShowHiddenItem();
+            Task<List<ShowSql>> showRefresh = RefreshShowHiddenItem(database);
             showRefresh.Wait();
 
-            Database.AddOrUpdateShows(showRefresh.Result);
+            database.AddOrUpdateShows(showRefresh.Result);
 
-            Task<List<ShowSql>> seasonRefresh = RefreshSeasonHiddenItem(showRefresh.Result);
+            Task<List<ShowSql>> seasonRefresh = RefreshSeasonHiddenItem(database, showRefresh.Result);
             seasonRefresh.Wait();
 
-            Database.AddOrUpdateShows(seasonRefresh.Result);
+            database.AddOrUpdateShows(seasonRefresh.Result);
         }
 
-        private async Task<List<ShowSql>> RefreshShowHiddenItem()
+        private async Task<List<ShowSql>> RefreshShowHiddenItem(IDatabase database)
         {
             List<ShowSql> res = new List<ShowSql>();
             TraktPagedResponse<ITraktUserHiddenItem> hiddenShow = await Client.Users
@@ -167,7 +164,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenShowRes)
             {
-                ShowSql localShow = GetShow(traktUserHiddenItem.Show.Ids.Trakt);
+                ShowSql localShow = GetShow(database, traktUserHiddenItem.Show.Ids.Trakt);
 
                 localShow.Update(traktUserHiddenItem);
 
@@ -177,8 +174,9 @@ namespace TraktDl.Business.Remote.Trakt
             return res;
         }
 
-        private async Task<List<ShowSql>> RefreshSeasonHiddenItem(List<ShowSql> shows)
+        private async Task<List<ShowSql>> RefreshSeasonHiddenItem(IDatabase database, List<ShowSql> shows)
         {
+
             Dictionary<uint, ShowSql> res = shows.ToDictionary(s => s.Id);
             TraktPagedResponse<ITraktUserHiddenItem> hiddenSeason = await Client.Users.GetHiddenItemsAsync(TraktHiddenItemsSection.ProgressCollected, TraktHiddenItemType.Season).ConfigureAwait(false);
 
@@ -186,7 +184,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (ITraktUserHiddenItem traktUserHiddenItem in hiddenSeasonRes)
             {
-                ShowSql localShow = res.ContainsKey(traktUserHiddenItem.Show.Ids.Trakt) ? res[traktUserHiddenItem.Show.Ids.Trakt] : GetShow(traktUserHiddenItem.Show.Ids.Trakt);
+                ShowSql localShow = res.ContainsKey(traktUserHiddenItem.Show.Ids.Trakt) ? res[traktUserHiddenItem.Show.Ids.Trakt] : GetShow(database, traktUserHiddenItem.Show.Ids.Trakt);
 
                 SeasonSql localSeason = GetSeason(localShow, traktUserHiddenItem.Season.Number.Value);
 
@@ -206,13 +204,13 @@ namespace TraktDl.Business.Remote.Trakt
             return _getShowLock;
         }
 
-        private ShowSql GetShow(uint id)
+        private ShowSql GetShow(IDatabase database, uint id)
         {
             ShowSql localShow = null;
 
             lock (ShowLock())
             {
-                localShow = Database.GetShow(id);
+                localShow = database.GetShow(id);
 
                 if (localShow == null)
                 {
@@ -270,14 +268,14 @@ namespace TraktDl.Business.Remote.Trakt
         }
 
 
-        public bool RefreshMissingEpisodes()
+        public bool RefreshMissingEpisodes(IDatabase database)
         {
-            SetupClient();
+            SetupClient(database);
 
-            RefreshHiddenItem();
+            RefreshHiddenItem(database);
 
             // Set all missing to unknown
-            Database.ClearMissingEpisodes();
+            database.ClearMissingEpisodes();
 
             Task<TraktListResponse<ITraktCollectionShow>> collected = Client.Users.GetCollectionShowsAsync("me", new TraktExtendedInfo { Full = true });
             Task<TraktListResponse<ITraktWatchedShow>> watched = Client.Users.GetWatchedShowsAsync("me", new TraktExtendedInfo { Full = true });
@@ -365,7 +363,7 @@ namespace TraktDl.Business.Remote.Trakt
             shows.RemoveAll(s => s.Watched);
 
             // PrepareDB 
-            List<ShowSql> bddShows = Database.GetShows();
+            List<ShowSql> bddShows = database.GetShows();
             List<ShowSql> updateShows = new List<ShowSql>();
 
             // Remove Show blacklist
@@ -374,7 +372,7 @@ namespace TraktDl.Business.Remote.Trakt
 
             foreach (TraktShow traktShow in shows)
             {
-                ShowSql localShow = GetShow(traktShow.Id);
+                ShowSql localShow = GetShow(database, traktShow.Id);
                 localShow.Update(traktShow);
                 updateShows.Add(localShow);
                 tasks.Add(HandleProgress(traktShow, localShow));
@@ -382,11 +380,13 @@ namespace TraktDl.Business.Remote.Trakt
 
             Task.WaitAll(tasks.ToArray());
 
-            Database.AddOrUpdateShows(updateShows);
+            database.AddOrUpdateShows(updateShows);
 
-            Database.ClearUnknownEpisodes();
+            database.ClearUnknownEpisodes();
 
             shows.RemoveAll(s => !s.Seasons.Any());
+
+
 
             return true;
         }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Web.Controllers
@@ -12,33 +8,73 @@ namespace TraktDl.Web.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly IDatabase _database;
         private readonly IImageApi _imageApi;
 
-        public ImagesController(IImageApi imageApi)
+        public ImagesController(IImageApi imageApi, IDatabase database)
         {
             _imageApi = imageApi;
-
+            _database = database;
         }
 
         // GET: api/Images/isAuth
         [HttpGet("isAuth")]
         public bool Get()
         {
-            return _imageApi.IsUsable;
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _imageApi.IsUsable(_database);
+
+                _database.Commit();
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // GET: api/Images/token
         [HttpGet("token")]
         public DeviceToken GetToken()
         {
-            return _imageApi.GetDeviceToken().Result;
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _imageApi.GetDeviceToken(_database).Result;
+
+                _database.Commit();
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Images/token/{token}
         [HttpPost("token/{token}")]
         public bool Post(string token)
         {
-            return _imageApi.CheckAuthent(token).Result;
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _imageApi.CheckAuthent(_database, token).Result;
+
+                _database.Commit();
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
     }
 }

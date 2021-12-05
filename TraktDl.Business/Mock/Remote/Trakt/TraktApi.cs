@@ -11,16 +11,14 @@ namespace TraktDl.Business.Mock.Remote.Trakt
     {
         public string GetMode => "Mock";
 
-        private IDatabase Database { get; }
+        public bool IsUsable(IDatabase database) => true;
 
-        public bool IsUsable => true;
-
-        public TraktApi(IDatabase database)
+        public TraktApi()
         {
-            Database = database;
+
         }
 
-        public bool RefreshMissingEpisodes()
+        public bool RefreshMissingEpisodes(IDatabase database)
         {
             List<ShowSql> result = new List<ShowSql>();
 
@@ -58,15 +56,15 @@ namespace TraktDl.Business.Mock.Remote.Trakt
                 Name = "9 fake",
             });
 
-            Database.AddOrUpdateShows(result);
+            database.AddOrUpdateShows(result);
 
             return true;
         }
 
 #pragma warning disable 1998
-        public async Task<DeviceToken> GetDeviceToken() => new DeviceToken();
+        public async Task<DeviceToken> GetDeviceToken(IDatabase database) => new DeviceToken();
 
-        public async Task<bool> CheckAuthent(string deviceToken) => true;
+        public async Task<bool> CheckAuthent(IDatabase database, string deviceToken) => true;
 
 #pragma warning restore 1998
     }

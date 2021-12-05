@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TraktDl.Business.Shared.Database;
 
 namespace TraktDl.Business.Shared.Remote
 {
@@ -11,12 +12,12 @@ namespace TraktDl.Business.Shared.Remote
         /// Get the missing episodes
         /// </summary>
         /// <returns></returns>
-        bool RefreshMissingEpisodes();
+        bool RefreshMissingEpisodes(IDatabase database);
 
-        bool IsUsable { get; }
+        bool IsUsable(IDatabase database);
 
-        Task<DeviceToken> GetDeviceToken();
+        Task<DeviceToken> GetDeviceToken(IDatabase database);
 
-        Task<bool> CheckAuthent(string deviceToken);
+        Task<bool> CheckAuthent(IDatabase database, string deviceToken);
     }
 }

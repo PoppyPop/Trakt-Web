@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using TraktDl.Business.Shared.Database;
-using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Business.Database.SqLite
 {
     public class ShowSql
     {
-        public uint Id { get; set; }
+        public virtual uint Id { get; set; }
 
         public virtual bool Blacklisted { get; set; }
 
@@ -22,8 +16,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public virtual string PosterUrl { get; set; }
 
-        public virtual List<SeasonSql> Seasons { get; set; }
-
+        public virtual IList<SeasonSql> Seasons { get; set; }
 
         public virtual string ProvidersData
         {
@@ -36,17 +29,17 @@ namespace TraktDl.Business.Database.SqLite
             }
         }
 
-        public Dictionary<ProviderSql, string> Providers { get; set; }
+        public virtual Dictionary<ProviderSql, string> Providers { get; set; }
 
         public ShowSql()
         {
-            
             Providers = new Dictionary<ProviderSql, string>();
+            Seasons = new List<SeasonSql>();
         }
 
         public ShowSql(bool create) : this()
         {
-            Seasons = new List<SeasonSql>();
+            
         }
 
 

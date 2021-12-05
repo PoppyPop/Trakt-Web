@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Web.Controllers
@@ -12,33 +9,73 @@ namespace TraktDl.Web.Controllers
     [ApiController]
     public class TrackingController : ControllerBase
     {
+        private readonly IDatabase _database;
         private readonly ITrackingApi _trackingApi;
 
-        public TrackingController(ITrackingApi trackingApi)
+        public TrackingController(ITrackingApi trackingApi, IDatabase database)
         {
             _trackingApi = trackingApi;
-
+            _database = database;
         }
 
         // GET: api/Tracking/isAuth
         [HttpGet("isAuth")]
         public bool Get()
         {
-            return _trackingApi.IsUsable;
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _trackingApi.IsUsable(_database);
+
+                _database.Commit();
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // GET: api/Tracking/token
         [HttpGet("token")]
         public DeviceToken GetToken()
         {
-            return _trackingApi.GetDeviceToken().Result;
+            try
+            {
+                _database.OpenTransaction();
+                var result = _trackingApi.GetDeviceToken(_database).Result;
+
+                _database.Commit();
+                return result;
+
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Tracking/token/{token}
         [HttpPost("token/{token}")]
         public bool Post(string token)
         {
-            return _trackingApi.CheckAuthent(token).Result;
+            try
+            {
+                _database.OpenTransaction();
+                var result = _trackingApi.CheckAuthent(_database, token).Result;
+
+                _database.Commit();
+                return result;
+
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
     }
 }

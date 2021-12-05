@@ -16,7 +16,7 @@ namespace TraktDl.Business.Shared.Remote
 
         public EpisodeStatus Status { get; set; }
 
-        public Dictionary<Provider, string> Providers { get; set; }
+        //public Dictionary<Provider, string> Providers { get; set; }
 
         public string PosterUrl { get; set; }
 
@@ -24,7 +24,7 @@ namespace TraktDl.Business.Shared.Remote
 
         public Episode()
         {
-            Providers = new Dictionary<Provider, string>();
+            //Providers = new Dictionary<Provider, string>();
         }
 
         public Episode(Guid id) : this()

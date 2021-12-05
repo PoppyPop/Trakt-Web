@@ -12,9 +12,9 @@ namespace TraktDl.Business.Shared.Remote
             Shared.Remote.Episode episode = new Shared.Remote.Episode(ep.Id)
             {
                 EpisodeNumber = ep.EpisodeNumber,
-                Providers = ep.Providers.ToDictionary(
-                    pair => (Provider)Enum.Parse(typeof(Provider), Enum.GetName(typeof(ProviderSql), pair.Key)),
-                    pair => pair.Value),
+                //Providers = ep.Providers.ToDictionary(
+                //    pair => (Provider)Enum.Parse(typeof(Provider), Enum.GetName(typeof(ProviderSql), pair.Key)),
+                //    pair => pair.Value),
                 PosterUrl = ep.PosterUrl,
                 Status = (EpisodeStatus)Enum.Parse(typeof(EpisodeStatus),
                     Enum.GetName(typeof(EpisodeStatusSql), ep.Status)),
@@ -48,9 +48,9 @@ namespace TraktDl.Business.Shared.Remote
                 Blacklisted = sho.Blacklisted,
                 SerieName = sho.Name,
                 Year = sho.Year,
-                Providers = sho.Providers.ToDictionary(
-                    pair => (Provider)Enum.Parse(typeof(Provider), Enum.GetName(typeof(ProviderSql), pair.Key)),
-                    pair => pair.Value),
+                //Providers = sho.Providers.ToDictionary(
+                //    pair => (Provider)Enum.Parse(typeof(Provider), Enum.GetName(typeof(ProviderSql), pair.Key)),
+                //    pair => pair.Value),
                 PosterUrl = sho.PosterUrl,
             };
 

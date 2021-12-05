@@ -18,6 +18,21 @@ namespace TraktDl.Business.Mock.Database
             Shows = new List<ShowSql>();
         }
 
+        public void OpenTransaction()
+        {
+
+        }
+
+        public void Commit()
+        {
+
+        }
+
+        public void Rollback()
+        {
+
+        }
+
         public void AddApiKey(ApiKeySql apiKey)
         {
             ApiKeys.Add(apiKey);

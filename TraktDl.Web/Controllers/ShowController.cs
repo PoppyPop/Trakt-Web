@@ -36,32 +36,84 @@ namespace TraktDl.Web.Controllers
         [Route("Missings")]
         public IEnumerable<Show> Missings()
         {
-            return _database.GetMissingEpisode().Select(c => c.Convert()).ToList();
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _database.GetMissingEpisode().Select(c => c.Convert()).ToList();
+
+                _database.Commit();
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // GET: api/Show/5
         [HttpGet("{id}", Name = "Get")]
         public Show Get(uint id)
         {
-            var showBdd = _database.GetShow(id);
+            try
+            {
+                _database.OpenTransaction();
 
-            return showBdd?.Convert();
+                var showBdd = _database.GetShow(id)?.Convert();
+
+                _database.Commit();
+
+                return showBdd;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Show/5/Images
         [HttpPost("{id}/Images")]
         public Show Images(uint id)
         {
-            return _imageApi.RefreshImage(id);
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _imageApi.RefreshImage(_database, id);
+                //Show result = null;
+
+                _database.Commit();
+
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Show
         [HttpPost]
         public ActionResult<bool> Refresh()
         {
-            var resutRefresh = _trackingApi.RefreshMissingEpisodes();
+            try
+            {
+                _database.OpenTransaction();
 
-            return resutRefresh;
+                var resutRefresh = _trackingApi.RefreshMissingEpisodes(_database);
+
+                _database.Commit();
+
+                return resutRefresh;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
 
@@ -76,7 +128,21 @@ namespace TraktDl.Web.Controllers
         [Route("Images")]
         public ActionResult<bool> Images()
         {
-            return _imageApi.RefreshImages();
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _imageApi.RefreshImages(_database);
+
+                _database.Commit();
+
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Show/ResetBlacklist
@@ -84,7 +150,21 @@ namespace TraktDl.Web.Controllers
         [Route("ResetBlacklist")]
         public ActionResult<bool> ResetBlacklist()
         {
-            return _database.ResetBlacklist();
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _database.ResetBlacklist();
+
+                _database.Commit();
+
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
 
         // POST: api/Show/ResetImages
@@ -92,7 +172,21 @@ namespace TraktDl.Web.Controllers
         [Route("ResetImages")]
         public ActionResult<bool> ResetImages()
         {
-            return _database.ResetImages();
+            try
+            {
+                _database.OpenTransaction();
+
+                var result = _database.ResetImages();
+
+                _database.Commit();
+
+                return result;
+            }
+            catch
+            {
+                _database.Rollback();
+                throw;
+            }
         }
     }
 }

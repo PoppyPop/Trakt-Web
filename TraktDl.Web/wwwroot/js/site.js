@@ -138,6 +138,7 @@ function getData() {
                 }
 
             });
+            //updateImages();
         }
     });
 }

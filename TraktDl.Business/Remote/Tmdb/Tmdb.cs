@@ -12,20 +12,18 @@ namespace TraktDl.Business.Remote.Tmdb
 {
     public class Tmdb : IImageApi
     {
-        private IDatabase Database { get; }
-
         private string ApiKeyName => "Tmdb";
 
-        public Tmdb(IDatabase database)
+        public Tmdb()
         {
-            Database = database;
+
         }
 
-        private TMDbClient Setup()
+        private TMDbClient Setup(IDatabase database)
         {
-            if (IsUsable)
+            if (IsUsable(database))
             {
-                var token = GetAuthToken();
+                var token = GetAuthToken(database);
                 TMDbClient client = new TMDbClient(token, useSsl: true);
 
                 client.GetConfigAsync().Wait();
@@ -36,50 +34,38 @@ namespace TraktDl.Business.Remote.Tmdb
             throw new Exception("Not authenticated");
         }
 
-        public bool RefreshImages()
+        public bool RefreshImages(IDatabase database)
         {
-            var shows = Database.GetMissingImages();
+            var shows = database.GetMissingImages();
 
-            var client = Setup();
-
-            List<Task> tasks = new List<Task>();
-            int counter = 0;
+            var client = Setup(database);
 
             foreach (var showSql in shows)
             {
-                if (counter % 4 == 0)
-                {
-                    Task.Delay(1000).Wait();
-                }
-
-                tasks.Add(RefreshShow(client, showSql));
-                counter++;
+                RefreshShow(client, showSql).Wait();
             }
 
-            Task.WaitAll(tasks.ToArray());
-
-            Database.AddOrUpdateShows(shows);
+            database.AddOrUpdateShows(shows);
 
             return true;
         }
 
-        public Show RefreshImage(uint id)
+        public Show RefreshImage(IDatabase database, uint id)
         {
-            var show = Database.GetShow(id);
+            var show = database.GetShow(id);
 
-            var client = Setup();
+            var client = Setup(database);
 
             RefreshShow(client, show).Wait();
 
-            Database.AddOrUpdateShows(new List<ShowSql> { show });
-
+            database.AddOrUpdateShows(new List<ShowSql> { show });
             return show.Convert();
         }
 
 
-        private string GetAuthToken()
+        private string GetAuthToken(IDatabase database)
         {
-            var key = Database.GetApiKey(ApiKeyName);
+            var key = database.GetApiKey(ApiKeyName);
 
             if (key != null)
             {
@@ -89,16 +75,17 @@ namespace TraktDl.Business.Remote.Tmdb
             return null;
         }
 
-        public bool IsUsable => GetAuthToken() != null;
+        public bool IsUsable(IDatabase database) => GetAuthToken(database) != null;
 
-        public Task<DeviceToken> GetDeviceToken()
+        public Task<DeviceToken> GetDeviceToken(IDatabase database)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> CheckAuthent(string deviceToken)
+        public async Task<bool> CheckAuthent(IDatabase database, string deviceToken)
         {
-            Database.AddApiKey(new ApiKeySql() { Id = ApiKeyName, ApiData = deviceToken });
+            database.AddApiKey(new ApiKeySql() { Id = ApiKeyName, ApiData = deviceToken });
+
             return true;
         }
 
@@ -106,7 +93,6 @@ namespace TraktDl.Business.Remote.Tmdb
         {
             if (!showSql.Blacklisted && showSql.Providers.ContainsKey(ProviderSql.Tmdb) && !string.IsNullOrEmpty(showSql.Providers[ProviderSql.Tmdb]) && int.TryParse(showSql.Providers[ProviderSql.Tmdb], out var showId))
             {
-                List<Task> tasks = new List<Task>();
                 bool first = true;
 
                 // Refresh episodes
@@ -126,7 +112,7 @@ namespace TraktDl.Business.Remote.Tmdb
                             }
 
 
-                            tasks.Add(RefreshEpisode(client, episodeSql, showId));
+                            await RefreshEpisode(client, episodeSql, showId);
                         }
                     }
                 }
@@ -138,9 +124,6 @@ namespace TraktDl.Business.Remote.Tmdb
 
                     showSql.Update(client.Config, tvShow);
                 }
-
-                // ensure episode update if finished
-                Task.WaitAll(tasks.ToArray());
             }
         }
 
@@ -148,7 +131,8 @@ namespace TraktDl.Business.Remote.Tmdb
         {
             TvEpisode tvEpisode = await client.GetTvEpisodeAsync(showId, episodeSql.Season.SeasonNumber, episodeSql.EpisodeNumber, TvEpisodeMethods.ExternalIds, "fr-FR").ConfigureAwait(false);
 
-            episodeSql.Update(client.Config, tvEpisode);
+            if (tvEpisode != null)
+                episodeSql.Update(client.Config, tvEpisode);
         }
 
     }

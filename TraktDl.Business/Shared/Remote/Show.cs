@@ -14,7 +14,7 @@ namespace TraktDl.Business.Shared.Remote
 
         public bool Blacklisted { get; set; }
 
-        public Dictionary<Provider, string> Providers { get; set; }
+        //public Dictionary<Provider, string> Providers { get; set; }
 
         public List<Season> Seasons { get; set; }
 
@@ -32,7 +32,7 @@ namespace TraktDl.Business.Shared.Remote
 
         public Show()
         {
-            Providers = new Dictionary<Provider, string>();
+            //Providers = new Dictionary<Provider, string>();
             Seasons = new List<Season>();
             Blacklisted = false;
         }

@@ -9,7 +9,6 @@ namespace TraktDl.Business.Database.SqLite
     {
         public virtual Guid Id { get; set; }
 
-        public virtual Guid SeasonID { get; set; }
         public virtual SeasonSql Season { get; set; }
 
         public virtual int EpisodeNumber { get; set; }
@@ -20,7 +19,7 @@ namespace TraktDl.Business.Database.SqLite
 
         public virtual string PosterUrl { get; set; }
 
-        public DateTime? AirDate { get; set; }
+        public virtual DateTime? AirDate { get; set; }
 
         public virtual string ProvidersData
         {
@@ -33,7 +32,7 @@ namespace TraktDl.Business.Database.SqLite
             }
         }
 
-        public Dictionary<ProviderSql, string> Providers { get; set; }
+        public virtual Dictionary<ProviderSql, string> Providers { get; set; }
 
         public EpisodeSql()
         {

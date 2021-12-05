@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TraktDl.Business.Shared.Database;
 using TraktDl.Business.Shared.Remote;
 
 namespace TraktDl.Business.Mock.Remote.Tmdb
@@ -13,22 +14,22 @@ namespace TraktDl.Business.Mock.Remote.Tmdb
             
         }
 
-        public bool RefreshImages()
+        public bool RefreshImages(IDatabase database)
         {
             return true;
         }
 
-        public Show RefreshImage(uint id)
+        public Show RefreshImage(IDatabase database, uint id)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsUsable => true;
+        public bool IsUsable(IDatabase database) => true;
 
 #pragma warning disable 1998
-        public async Task<DeviceToken> GetDeviceToken() => new DeviceToken();
+        public async Task<DeviceToken> GetDeviceToken(IDatabase database) => new DeviceToken();
 
-        public async Task<bool> CheckAuthent(string deviceToken) => true;
+        public async Task<bool> CheckAuthent(IDatabase database, string deviceToken) => true;
 
 #pragma warning restore 1998
     }

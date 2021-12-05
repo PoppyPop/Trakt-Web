@@ -6,6 +6,12 @@ namespace TraktDl.Business.Shared.Database
 {
     public interface IDatabase
     {
+        void OpenTransaction();
+
+        void Commit();
+
+        void Rollback();
+
         void AddApiKey(ApiKeySql apiKey);
 
         ApiKeySql GetApiKey(string name);
