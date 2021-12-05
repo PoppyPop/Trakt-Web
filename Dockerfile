@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -14,7 +14,7 @@ WORKDIR /app/TraktDl.Web
 RUN dotnet publish -c Release -o out
 
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:3.1-alpine AS runtime
 WORKDIR /app
 
 EXPOSE 80
